@@ -3,6 +3,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
+import searchIconLight from '../../assets/light.svg';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { LayoutProps } from '../../interfaces/LayoutProps';
@@ -23,6 +24,25 @@ const StyledTitle = styled(Typography)(() => ({
   color: '#641C36',
 }));
 
+const StyledInputField = styled(TextField)(() => ({
+  fontFamily: 'Poppins',
+  fontWeight: '500',
+  fontSize: '12px',
+  lineHeight: '24px',
+  letterSpacing: '-0.01em',
+  color: '#9A9FA5',
+  flex: 'none',
+  order: 1,
+  flexGrow: 0,
+  '& .css-nz481w-MuiInputBase-input-MuiInput-input': {
+    marginLeft: '7px',
+    '&:focus': {
+      caretColor: '#2A85FF',
+    },
+  },
+}));
+
+
 const StyledSearchBox = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'row',
@@ -34,14 +54,6 @@ const StyledSearchBox = styled(Box)(() => ({
   marginRight: '33px',
 }));
 
-const StyledSearchIcon = styled(SearchIcon)(() => ({
-  width: '24px',
-  height: '24px',
-  flex: 'none',
-  color: '#9A9FA5',
-  order: 0,
-  flexGrow: 0,
-}));
 
 const StyledRightBlock = styled(Box)(() => ({
   display: 'flex',
@@ -92,24 +104,14 @@ const Topbar = ({ children }: LayoutProps) => {
           </Box>
           <Box display="flex" alignItems="center" justifyContent="flex-end" flexGrow={1}>
             <StyledSearchBox>
-              <TextField
+              <StyledInputField
                 variant="standard"
                 size="small"
-                placeholder="Search or type something"
+                placeholder=" Search or type something"
                 InputProps={{
                   disableUnderline: true,
-                  startAdornment: <StyledSearchIcon />,
-                  sx: {
-                    fontFamily: 'Poppins',
-                    fontWeight: '500',
-                    fontSize: '12px',
-                    lineHeight: '24px',
-                    letterSpacing: '-0.01em',
-                    color: '#9A9FA5',
-                    flex: 'none',
-                    order: 1,
-                    flexGrow: 0,
-                  },
+                  startAdornment: <><img src={searchIconLight} alt="" /></>,
+                  
                 }}
               />
             </StyledSearchBox>

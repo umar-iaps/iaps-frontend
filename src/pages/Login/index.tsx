@@ -7,8 +7,9 @@ import { styled } from '@mui/material/styles';
 
 const StyledBox = styled(Box)(() => ({
   backgroundColor: 'white',
-  height: '715px',
+  height: '721px',
   borderRadius: '0px 60px 60px 0px',
+  transform: 'translate(0px, 3px)',
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
