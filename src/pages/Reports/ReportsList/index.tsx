@@ -85,7 +85,7 @@ const ReportsList = () => {
     <StyledButton variant="contained" startIcon={<AddIcon />} sx={{ textTransform: 'none' }}>Add New Report</StyledButton>
         </Link>
         </ButtonGroup>
-        <Typography variant="subtitle1" sx={{ backgroundColor: '#F2F2F2' }}>
+        <Typography variant="h6" sx={{ backgroundColor: '#F2F2F2', fontWeight: 600, paddingLeft: '18px' }}>
           Published Reports
         </Typography>
         <TableContainer>

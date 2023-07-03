@@ -77,7 +77,7 @@ const ListJobs = () => {
   };
   return (
     <React.Fragment>
-    <Container sx={{ overflow: 'auto', bgcolor: '#FFFFFF', borderRadius: '30px', margin: '40px auto', width: '60vw' }}>
+    <Container sx={{ overflow: 'auto', bgcolor: '#FFFFFF', borderRadius: '30px', margin: '40px auto', width: '80vw', height: '75vh' }}>
     <ButtonGroup sx={{ display: 'flex', justifyContent: 'space-between', margin: '30px'}}>
     <StyledSearch placeholder='Search' InputProps={{ endAdornment: <StyledIcon /> }} />
     <Link to="/job/new">

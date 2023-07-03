@@ -1,9 +1,7 @@
-import React from 'react'
-
-const index = () => {
+const NewJob = () => {
   return (
     <div>index</div>
   )
 }
 
-export default index
+export default NewJob;

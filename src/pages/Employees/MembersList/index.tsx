@@ -82,36 +82,36 @@ function MembersList() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container sx={{ overflow: 'auto', bgcolor: '#FFFFFF', borderRadius: '30px', margin: '50px auto', width: '60vw' }}>
+      <Container sx={{ overflow: 'auto', bgcolor: '#FFFFFF', borderRadius: '30px', margin: '50px auto', width: '80vw', height: '75vh'}}>
       <ButtonGroup sx={{ display: 'flex', justifyContent: 'space-between', margin: '30px'}}>
     <StyledSearch placeholder='Search' InputProps={{ endAdornment: <StyledIcon /> }} />
     <Link to="/job/new">
     <StyledButton variant="contained" startIcon={<AddIcon />} sx={{ textTransform: 'none' }}>Add New Member</StyledButton>
         </Link>
         </ButtonGroup>
-        <Typography variant="subtitle1" sx={{ backgroundColor: '#F2F2F2' }}>
+        <Typography variant="h6" sx={{ backgroundColor: '#F2F2F2', fontWeight: 600, paddingLeft: '18px' }}>
           Members
         </Typography>
         <TableContainer>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Full Name</TableCell>
-                <TableCell align="right">Position</TableCell>
-                <TableCell align="right" sx={{marginRight: '20px'}}>Actions</TableCell>
+              <TableCell sx={{fontWeight: 600}}>Full Name</TableCell>
+                <TableCell sx={{fontWeight: 600}} align="right">Position</TableCell>
+                <TableCell sx={{fontWeight: 600, marginRight: '20px'}} align="center">Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row: any, index: number) => (
                 <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="row">
+                 <TableCell component="th" scope="row">
                     {row.fullname}
                   </TableCell>
                   <TableCell align="right">{row.position}</TableCell>
-                  <TableCell align="right">
-                    <Button variant="outlined" startIcon={<EditIcon />} sx={{ marginRight: '10px' }} onClick={() => handleEdit(index)}>
+                  <TableCell align="center" sx={{marginRight: 0}}>
+                    <Button variant="text" startIcon={<EditIcon />}  onClick={() => handleEdit(index)}>
                     </Button>
-                    <Button variant="outlined" startIcon={<DeleteIcon />} sx={{ marginRight: '10px' }} onClick={() => handleDelete(index)}>
+                    <Button variant="text" startIcon={<DeleteIcon />}  onClick={() => handleDelete(index)}>
                     </Button>
                   </TableCell>
                 </TableRow>
