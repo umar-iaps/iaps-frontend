@@ -4,6 +4,7 @@ import { Box, Container, Grid, TextField, Typography, Button } from '@mui/materi
 import LoginImage from '../../assets/login-side.png';
 import logo from '../../assets/iaps-logo.png';
 import { styled } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
 
 const StyledBox = styled(Box)(() => ({
   backgroundColor: 'white',
@@ -107,8 +108,9 @@ const Login = () => {
                 />
               </StyledInputField>
               <br />
+              <Link to="/">
               <StyledButton  variant="contained" sx={{ textTransform: 'none' }}>Login</StyledButton>
-
+              </Link>
             </StyledBox>
           </Grid>
         </Grid>
