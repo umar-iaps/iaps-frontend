@@ -48,8 +48,14 @@ const StyledInputField = styled(Box)(() => ({
   maxWidth: '368px',
   '& .MuiInputBase-input': {
     padding: '13.5px 14px',
+    '&:focus': {
+      borderRadius: '5px',
+      border: '2px solid #CCC',
+      background: '#F2F2F2',
+    },
   },
 }));
+
 
 const StyledTypography = styled(Typography)(() => ({
   color: '#641C36',
@@ -60,6 +66,26 @@ const StyledTypography = styled(Typography)(() => ({
   letterSpacing: '-0.48px',
 
 }));
+
+const StyledTextField = styled(TextField)(() => ({
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '6px',
+    border:'1px solid #CCC',
+    '& fieldset': {
+      borderColor: 'white',
+    },
+    '&:hover fieldset': {
+      borderColor: 'white',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#CCC',
+      border: 'none',
+    },
+  },
+
+}));
+
+
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -87,12 +113,15 @@ const Login = () => {
                 <Typography variant="h6" sx={{ fontSize: '14px', color: '#333', fontWeight: '600' }}>
                   Email
                 </Typography>
-                <TextField
+                <StyledTextField
                   type="email"
                   fullWidth
-                  placeholder="Enter your email"
+                  placeholder=" Enter your email"
                   id="fullWidth"
-                  sx={{ height: '45px' }}
+                    sx={{ height: '45px' }}
+                    inputProps={{
+                      style: { caretColor: '#2A85FF' },
+                    }}
                 />
               </StyledInputField>
 
@@ -100,21 +129,25 @@ const Login = () => {
                 <Typography variant="h6" sx={{ fontSize: '14px', color: '#333', fontWeight: '600', marginTop: '13px' }}>
                   Password
                 </Typography>
-                <TextField
+                <StyledTextField
                   type="password"
                   fullWidth
-                  placeholder="Enter your password"
-                  id="fullWidth"
+                  placeholder=" Enter your password"
+                    id="fullWidth"
+                    inputProps={{
+                      style: { caretColor: '#2A85FF' },
+                    }}
                 />
               </StyledInputField>
               <br />
               <Link to="/">
-              <StyledButton  variant="contained" sx={{ textTransform: 'none' }}>Login</StyledButton>
+              <StyledButton variant="contained" sx={{ textTransform: 'none' }}>Login</StyledButton>
               </Link>
+
             </StyledBox>
           </Grid>
         </Grid>
-      </Box>
+        </Box>
     </section>
   );
 };

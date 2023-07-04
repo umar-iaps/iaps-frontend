@@ -1,6 +1,13 @@
+import {Typography} from '@mui/material';
+import BoxComponent from '../../../components/Box';
 const AddArticle = () => {
   return (
-    <div>AddArticle</div>
+    // <BoxComponent>
+      <Typography variant='h6'>
+      New Article
+      </Typography>
+    // </BoxComponent>
+      
   )
 }
 

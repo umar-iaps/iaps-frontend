@@ -82,7 +82,7 @@ function MembersList() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container sx={{ overflow: 'auto', bgcolor: '#FFFFFF', borderRadius: '30px', margin: '50px auto', width: '80vw', height: '75vh'}}>
+      <Container sx={{  bgcolor: '#FFFFFF', borderRadius: '30px', margin: '50px auto', width: '80vw', height: '75vh'}}>
       <ButtonGroup sx={{ display: 'flex', justifyContent: 'space-between', margin: '30px'}}>
     <StyledSearch placeholder='Search' InputProps={{ endAdornment: <StyledIcon /> }} />
     <Link to="/job/new">
