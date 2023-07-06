@@ -1,116 +1,84 @@
-import { useState } from 'react';
-import Layout from '../../components/Layout';
-import { Box, Container, Grid, TextField, Typography, Button } from '@mui/material';
-import LoginImage from '../../assets/login-side.png';
-import logo from '../../assets/iaps-logo.png';
-import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
-
-const StyledBox = styled(Box)(() => ({
-  backgroundColor: 'white',
-  height: '721px',
-  borderRadius: '0px 60px 60px 0px',
-  transform: 'translate(0px, 3px)',
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  borderRadius: '26px',
-  background: '#C64B68',
-  width: '189px',
-  padding: '8px 24px 8px 20px',
-  height: '44px',
-  color: '#FFF',
-  '&:hover': {
-    background: '#C64B68',
-  },
-  margin: 'auto',
-  display: 'block',
-  maxWidth: '368px',
-  '& .MuiInputBase-input': {
-    padding: '13.5px 14px',
-  },
-}));
-
-const StyledBoxInside = styled(Box)(() => ({
-  margin: 'auto',
-  display: 'block',
-  textAlign: 'center',
-  color: 'black',
-  padding: '9px',
-
-  // backgroundColor: '#aaa',
-}));
-const StyledInputField = styled(Box)(() => ({
-  margin: 'auto',
-  display: 'block',
-  color: 'black',
-  padding: '9px',
-  maxWidth: '368px',
-  '& .MuiInputBase-input': {
-    padding: '13.5px 14px',
-    '&:focus': {
-      borderRadius: '5px',
-      border: '2px solid #CCC',
-      background: '#F2F2F2',
-    },
-  },
-}));
-
-
-const StyledTypography = styled(Typography)(() => ({
-  color: '#641C36',
-  fontSize: '48px',
-  fontFamily: 'Poppins',
-  fontStyle: 'normal',
-  fontWeight: '600',
-  letterSpacing: '-0.48px',
-
-}));
-
-const StyledTextField = styled(TextField)(() => ({
-  '& .MuiOutlinedInput-root': {
-    borderRadius: '6px',
-    border:'1px solid #CCC',
-    '& fieldset': {
-      borderColor: 'white',
-    },
-    '&:hover fieldset': {
-      borderColor: 'white',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#CCC',
-      border: 'none',
-    },
-  },
-
-}));
-
-
+import { useState } from "react";
+import { Box, Grid, Typography } from "@mui/material";
+import LoginImage from "../../assets/login-side.png";
+import logo from "../../assets/iaps-logo.png";
+import { Link } from "react-router-dom";
+import Layout from "../../components/Layout";
+import {
+  StyledBox,
+  StyledBoxInside,
+  StyledButton,
+  StyledInputField,
+  StyledTextField,
+  StyledTypography,
+} from "./style";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
+  const [credentials, setCredentials] = useState({});
+
+  const handleLogin = () => {};
+
+  const handleChange = (e: any) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setCredentials((a) => {
+      return { ...credentials, [name]: value };
+    });
+    console.log("I am in handle Change");
+    console.log("credentials are ", credentials);
+  };
 
   return isLogin ? (
-    <Layout>
-      Hi, I am a child component
-    </Layout>
+    <Layout>Hi, I am a child component</Layout>
   ) : (
-    <section style={{ backgroundColor: '#641C36', width: '100%', minHeight: '100vh', color: 'white' }}>
-      <Box sx={{ padding: '44px 0px 44px 0px', maxWidth: '100%', margin: '0px 50px' }}>
+    <section
+      style={{
+        backgroundColor: "#641C36",
+        width: "100%",
+        minHeight: "100vh",
+        color: "white",
+      }}
+    >
+      <Box
+        sx={{
+          padding: "44px 0px 44px 0px",
+          maxWidth: "100%",
+          margin: "0px 50px",
+        }}
+      >
         <Grid container>
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <img src={LoginImage} width="100%" height={750} alt="" />
           </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12} sx={{ transform: 'translate(-18px, 9px)' }}>
+          <Grid
+            item
+            lg={6}
+            md={6}
+            sm={12}
+            xs={12}
+            sx={{ transform: "translate(-18px, 9px)" }}
+          >
             <StyledBox>
               <StyledBoxInside>
-                <img src={logo} width={100} height={44} alt="" style={{ marginTop: '100px' }} />
+                <img
+                  src={logo}
+                  width={100}
+                  height={44}
+                  alt=""
+                  style={{ marginTop: "100px" }}
+                />
                 <StyledTypography variant="h4">
                   Hello, Welcome back!
                 </StyledTypography>
               </StyledBoxInside>
-              <StyledInputField ><br />
-                <Typography variant="h6" sx={{ fontSize: '14px', color: '#333', fontWeight: '600' }}>
+              <StyledInputField>
+                <br />
+                <Typography
+                  variant="h6"
+                  sx={{ fontSize: "14px", color: "#333", fontWeight: "600" }}
+                >
                   Email
                 </Typography>
                 <StyledTextField
@@ -118,36 +86,49 @@ const Login = () => {
                   fullWidth
                   placeholder=" Enter your email"
                   id="fullWidth"
-                    sx={{ height: '45px' }}
-                    inputProps={{
-                      style: { caretColor: '#2A85FF' },
-                    }}
+                  sx={{ height: "45px" }}
+                  inputProps={{
+                    style: { caretColor: "#2A85FF" },
+                  }}
+                  onChange={handleChange}
                 />
               </StyledInputField>
 
-              <StyledInputField mt={3} >
-                <Typography variant="h6" sx={{ fontSize: '14px', color: '#333', fontWeight: '600', marginTop: '13px' }}>
+              <StyledInputField mt={3}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontSize: "14px",
+                    color: "#333",
+                    fontWeight: "600",
+                    marginTop: "13px",
+                  }}
+                >
                   Password
                 </Typography>
                 <StyledTextField
                   type="password"
                   fullWidth
                   placeholder=" Enter your password"
-                    id="fullWidth"
-                    inputProps={{
-                      style: { caretColor: '#2A85FF' },
-                    }}
+                  id="fullWidth"
+                  inputProps={{
+                    style: { caretColor: "#2A85FF" },
+                  }}
+                  onChange={handleChange}
                 />
               </StyledInputField>
               <br />
-              <Link to="/">
-              <StyledButton variant="contained" sx={{ textTransform: 'none' }}>Login</StyledButton>
-              </Link>
-
+              <StyledButton
+                variant="contained"
+                sx={{ textTransform: "none" }}
+                onClick={handleLogin}
+              >
+                Login
+              </StyledButton>
             </StyledBox>
           </Grid>
         </Grid>
-        </Box>
+      </Box>
     </section>
   );
 };

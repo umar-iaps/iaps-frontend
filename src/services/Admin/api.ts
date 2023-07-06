@@ -1,5 +1,6 @@
 import axios from 'axios';
-const baseURL='https://api.peoplefirstdevelopment.org'
+import api from '../baseapi';
+const baseURL=`${api}/Admin`;
 export const searchProperties = async (query: string) => {
   try {
     const response = await axios.get(`${baseURL}/database/properties/search?${query}`);

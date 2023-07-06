@@ -1,37 +1,60 @@
 import axios from 'axios';
-const baseURL='https://api.peoplefirstdevelopment.org'
-export const getAllReportsByDomainId = async (query: string) => {
+import api from '../baseapi';
+const baseURL=`${api}/Reports`;
+export const getAllReportsByDomainId = async (id: string) => {
   try {
-    const response = await axios.get(`${baseURL}/database/properties/search?${query}`);
+    const response = await axios.get(`${baseURL}/getAll/${id}`);
     return { type: 'success', data: response.data };
-  } catch (error) {
+  } catch (error: any) {
     return { type: 'error', data: error };
   }
 };
 
 export const getAllReports = async () => {
   try {
-    const response = await axios.get(`${baseURL}/api/Reports/getAllForDashboard`);
+    const response = await axios.get(`${baseURL}/getAllForDashboard`);
     return { type: 'success', data: response.data };
   } catch (error) {
     return { type: 'error', data: error };
   }
 };
 
-export const getImages = async (id: string) => {
+export const getReportById = async (id: string) => {
   try {
-    const response = await axios.get(`${baseURL}/database/image/${id}`);
+    const response = await axios.get(`${baseURL}/getById/${id}`);
     return { type: 'success', data: response.data };
   } catch (error) {
     return { type: 'error', data: error };
   }
 };
 
-export const getScrapData = async () => {
+export const addReport = async (reportData: any) => {
   try {
-    const response = await axios.get(`${baseURL}/database/properties/search`);
+    const response = await axios.post(`${baseURL}/add`, reportData);
     return { type: 'success', data: response.data };
   } catch (error) {
     return { type: 'error', data: error };
   }
 };
+
+
+export const updateReport = async (reportData: any) => {
+  try{
+    const response = await axios.put(`${baseURL}/edit`, reportData);
+    return {type: 'success', data: response.data};
+  }
+  catch(error) {
+    return {type: 'error', data: error};
+  }
+}
+
+export const deleteReport = async (reportData: any) => {
+  try{
+    const response = await axios.delete(`${baseURL}/delete`, reportData);
+    return {type: 'success', data: response.data};
+
+  }
+  catch(error){
+    return {type: 'error', data: error};
+  }
+}

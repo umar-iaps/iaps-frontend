@@ -1,8 +1,13 @@
+import AddIcon from '@mui/icons-material/Add';
+import { StyledButton } from './style';
 
-const AddButton = ({content}: any) => {
+const AddButton = (props: any) => {
+  
   return (
-    <div>AddButton</div>
+    <>
+      <StyledButton variant="contained" startIcon={<AddIcon />} sx={{ textTransform: 'none', mt: 2 }}> {props.title}</StyledButton>
+    </>
   )
 }
 
-export default AddButton
+export default AddButton;
