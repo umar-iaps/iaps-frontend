@@ -104,7 +104,7 @@ const MembersList = () => {
               backgroundColor: "#FFF4F7;",
               fontWeight: 600,
               paddingLeft: "18px",
-              width: "800px",
+              // width: "800px",
               color: "#641C36",
               margin: "20px",
               marginTop: "55px",

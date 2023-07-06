@@ -16,6 +16,7 @@ import { login } from "../../services/Accounts/api";
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [credentials, setCredentials] = useState({});
+  const [loginError, setLoginError] = useState(false);
 
   const handleChange = (e: any) => {
     const name = e.target.name;
@@ -26,10 +27,15 @@ const Login = () => {
   };
 
   const handleLogin = () => {
-    login(credentials).then((response: any) => {
-      console.log("response is ", response);
-      localStorage.setItem("token", 83);
-    });
+    setLoginError(true);
+    login(credentials)
+      .then((response: any) => {
+        console.log("response is ", response);
+        localStorage.setItem("token", "83");
+      })
+      .catch((error: any) => {
+        setLoginError(true);
+      });
   };
 
   return isLogin ? (
@@ -129,9 +135,24 @@ const Login = () => {
               >
                 Login
               </StyledButton>
+              {loginError && (
+                <Typography
+                  variant="h6"
+                  sx={{
+                    marginTop: "20px",
+                    fontSize: "14px",
+                    color: "#333",
+                    fontWeight: "600",
+                    textAlign: "center",
+                  }}
+                >
+                  Wrong Credentials
+                </Typography>
+              )}
             </StyledBox>
           </Grid>
         </Grid>
+        );
       </Box>
     </section>
   );

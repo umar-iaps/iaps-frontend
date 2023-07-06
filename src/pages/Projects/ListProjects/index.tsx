@@ -180,7 +180,7 @@ const Projects = () => {
               backgroundColor: "#FFF4F7;",
               fontWeight: 600,
               paddingLeft: "18px",
-              width: "810px",
+              // width: "810px",
               color: "#641C36",
               margin: "20px",
             }}
