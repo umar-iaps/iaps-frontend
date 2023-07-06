@@ -75,6 +75,24 @@ const Projects = () => {
   const [tableContent, setTableContent] = useState(tableData);
   const [tableHeadingData, setTableHeadingData] = useState(tableHeading);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredTableContent, setFilteredTableContent] = useState(tableData);
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    filterTableContent(event.target.value);
+  };
+
+  const filterTableContent = (term: any) => {
+    const filteredData = tableData.filter(
+      (item) =>
+        item.title.toLowerCase().includes(term.toLowerCase()) ||
+        item.country.toLowerCase().includes(term.toLowerCase()) ||
+        item.body.toLowerCase().includes(term.toLowerCase())
+    );
+    setFilteredTableContent(filteredData);
+  };
+
   return (
     <section>
       {/* topbar */}
@@ -151,6 +169,8 @@ const Projects = () => {
           <Box>
             <StyledSearch
               placeholder="Search"
+              value={searchTerm}
+              onChange={handleSearchChange}
               InputProps={{ endAdornment: <StyledIcon /> }}
             />
           </Box>
@@ -167,11 +187,16 @@ const Projects = () => {
           >
             Published Projects
           </Typography>
-          {/* table */}
-          <CommonTable
-            tableContent={tableContent}
-            tableHeadingData={tableHeadingData}
-          />
+          {filteredTableContent.length === 0 ? (
+            <Typography variant="body1" sx={{ textAlign: "center" }}>
+              No records are found!
+            </Typography>
+          ) : (
+            <CommonTable
+              tableContent={filteredTableContent}
+              tableHeadingData={tableHeadingData}
+            />
+          )}
         </Container>
         {/* </Grid>
                 </Grid> */}

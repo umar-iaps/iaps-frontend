@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import LoginImage from "../../assets/login-side.png";
 import logo from "../../assets/iaps-logo.png";
-import { Link } from "react-router-dom";
 import Layout from "../../components/Layout";
 import {
   StyledBox,
@@ -12,22 +11,25 @@ import {
   StyledTextField,
   StyledTypography,
 } from "./style";
+import { login } from "../../services/Accounts/api";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [credentials, setCredentials] = useState({});
 
-  const handleLogin = () => {};
-
   const handleChange = (e: any) => {
     const name = e.target.name;
     const value = e.target.value;
-
-    setCredentials((a) => {
-      return { ...credentials, [name]: value };
+    setCredentials((set) => {
+      return { ...set, [name]: value };
     });
-    console.log("I am in handle Change");
-    console.log("credentials are ", credentials);
+  };
+
+  const handleLogin = () => {
+    login(credentials).then((response: any) => {
+      console.log("response is ", response);
+      localStorage.setItem("token", 83);
+    });
   };
 
   return isLogin ? (
@@ -83,6 +85,7 @@ const Login = () => {
                 </Typography>
                 <StyledTextField
                   type="email"
+                  name="email"
                   fullWidth
                   placeholder=" Enter your email"
                   id="fullWidth"
@@ -108,6 +111,7 @@ const Login = () => {
                 </Typography>
                 <StyledTextField
                   type="password"
+                  name="password"
                   fullWidth
                   placeholder=" Enter your password"
                   id="fullWidth"
