@@ -1,73 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import { ButtonGroup, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import CommonTable from "../../../components/Table";
-import AddButton from "../../../components/AddButton";
-import Header from "../../../components/Topbar/Header";
+import CommonTable from "@components/Table";
+import AddButton from "@components/AddButton";
+import Header from "@components/Topbar/Header";
 import { StyledIcon, StyledSearch } from "./style";
+import { getAllReports } from "@services/Reports/api";
+import { reportHeadingData } from "@utils/tableHeadings";
 
-const tableData = [
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-    created: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-    created: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-    created: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-    created: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-    created: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-    created: "Domain",
-    publishDate: "02/05/23",
-  },
+const domainData = [
+  { value: "", label: "None" },
+  { value: 10, label: "Domain" },
+  { value: 20, label: "Domain1" },
+  { value: 30, label: "Domain2" },
 ];
 
-const tableHeading = {
-  title: "Title",
-  country: "Country",
-  body: "Body",
-  created: "Created by",
-  published: "Date Published",
-};
-
 const ReportsList = () => {
-  const [tableContent, setTableContent] = useState(tableData);
-  const [tableHeadingData, setTableHeadingData] = useState(tableHeading);
-
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTableContent, setFilteredTableContent] = useState(tableData);
+  const [filteredTableContent, setFilteredTableContent] = useState([]);
+
+  useEffect(() => {
+    getAllReports().then((response) => {
+      console.log("response on reports is ", response.data);
+      const reportsData = response.data;
+      const newData = reportsData.map((item: any) => {
+        return {
+          title: item.title,
+          expertize: item.expertize,
+          sectors: item.sectors[0] || "N/A",
+          regions: item.regions[0]?.name ? item.regions[0]?.name : "N/A",
+          year: item.year,
+        };
+      });
+      setFilteredTableContent(newData);
+    });
+  });
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -97,8 +67,6 @@ const ReportsList = () => {
           pb: 5,
         }}
       >
-        {/* <Grid container >
-                    <Grid item > */}
         <CssBaseline />
         <Container>
           <ButtonGroup
@@ -112,9 +80,9 @@ const ReportsList = () => {
               <FormControl sx={{ m: 1, minWidth: 170 }} size="small">
                 <InputLabel
                   id="demo-select-small-label"
-                  style={{ color: "#999" }}
+                  sx={{ color: "#999999" }}
                 >
-                  Filter by sector
+                  Select a domain
                 </InputLabel>
                 <Select
                   labelId="demo-select-small-label"
@@ -122,18 +90,18 @@ const ReportsList = () => {
                   label="Age"
                   sx={{ borderRadius: "35px" }}
                 >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  {domainData.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
+
               <FormControl sx={{ m: 1, minWidth: 170 }} size="small">
                 <InputLabel
                   id="demo-select-small-label"
-                  style={{ color: "#999" }}
+                  sx={{ color: "#999999" }}
                 >
                   Filter by region
                 </InputLabel>
@@ -143,20 +111,19 @@ const ReportsList = () => {
                   label="Age"
                   sx={{ borderRadius: "35px" }}
                 >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  {domainData.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
               <FormControl sx={{ m: 1, minWidth: 170 }} size="small">
                 <InputLabel
                   id="demo-select-small-label"
-                  style={{ color: "#999" }}
+                  sx={{ color: "#999999" }}
                 >
-                  Filter by year
+                  Filter by Year
                 </InputLabel>
                 <Select
                   labelId="demo-select-small-label"
@@ -164,12 +131,11 @@ const ReportsList = () => {
                   label="Age"
                   sx={{ borderRadius: "35px" }}
                 >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  {domainData.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -199,15 +165,15 @@ const ReportsList = () => {
           >
             Published Reports
           </Typography>
-          {/* table */}
           {filteredTableContent.length === 0 ? (
             <Typography variant="body1" sx={{ textAlign: "center" }}>
               No records are found!
             </Typography>
           ) : (
             <CommonTable
+              path="/reports"
               tableContent={filteredTableContent}
-              tableHeadingData={tableHeadingData}
+              tableHeadingData={reportHeadingData}
             />
           )}
         </Container>

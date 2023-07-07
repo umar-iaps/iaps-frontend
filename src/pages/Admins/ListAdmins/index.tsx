@@ -1,14 +1,17 @@
-import { useState } from "react";
-import { Box } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
-import Container from "@mui/material/Container";
-import { ButtonGroup, Typography } from "@mui/material";
+import { useState, useEffect } from "react";
+import {
+  Box,
+  CssBaseline,
+  Container,
+  ButtonGroup,
+  Typography,
+} from "@mui/material";
 import { Link } from "react-router-dom";
-import CommonTable from "../../../components/Table";
-import AddButton from "../../../components/AddButton";
-import Header from "../../../components/Topbar/Header";
+import CommonTable from "@components/Table";
+import AddButton from "@components/AddButton";
+import Header from "@components/Topbar/Header";
 import { StyledSearch, StyledIcon } from "./style";
-import { useEffect } from "react";
+import { getAdmins } from "@services/Admin/api";
 
 const tableData = [
   {
@@ -55,6 +58,10 @@ const LastAdmins = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTableContent, setFilteredTableContent] = useState(tableData);
+
+  useEffect(() => {
+    getAdmins;
+  });
 
   const handleSearchChange = (event: any) => {
     const term = event.target.value;
@@ -130,6 +137,7 @@ const LastAdmins = () => {
             </Typography>
           ) : (
             <CommonTable
+              path="/admins"
               tableContent={filteredTableContent}
               tableHeadingData={tableHeadingData}
             />

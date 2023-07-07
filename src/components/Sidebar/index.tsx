@@ -1,12 +1,12 @@
 import Items from "./Items";
-import LogoImage from "../../assets/iaps-logo.png";
+import LogoImage from "@assets/iaps-logo.png";
 import { Box } from "@mui/material";
 
 const Sidebar = () => {
   return (
     <Box
       sx={{
-        display: "none",
+        // display: "none",
         backgroundColor: "#641c36",
         color: "whitesmoke",
         minWidth: 340,

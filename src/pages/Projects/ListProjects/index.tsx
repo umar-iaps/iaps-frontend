@@ -1,82 +1,43 @@
-import { useState } from "react";
-import {
-  Box,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { useEffect, useState } from "react";
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import { ButtonGroup, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import CommonTable from "../../../components/Table";
-import AddButton from "../../../components/AddButton";
-import Header from "../../../components/Topbar/Header";
+import CommonTable from "@components/Table";
+import AddButton from "@components/AddButton";
+import Header from "@components/Topbar/Header";
 import { StyledIcon, StyledSearch } from "./style";
+import { getAllProjects } from "@services/Projects/api";
+import { projectHeadingData } from "@utils/tableHeadings";
 
-const tableData = [
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-    created: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-    created: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-    created: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-    created: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-    created: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-    created: "Domain",
-    publishDate: "02/05/23",
-  },
+const domainData = [
+  { value: "", label: "None" },
+  { value: 10, label: "Domain" },
+  { value: 20, label: "Domain1" },
+  { value: 30, label: "Domain2" },
 ];
 
-const tableHeading = {
-  title: "Title",
-  country: "Country",
-  body: "Body",
-  created: "Created by",
-  published: "Date Published",
-};
-
-// styled css
-
 const Projects = () => {
-  const [tableContent, setTableContent] = useState(tableData);
-  const [tableHeadingData, setTableHeadingData] = useState(tableHeading);
-
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTableContent, setFilteredTableContent] = useState(tableData);
+  const [filteredTableContent, setFilteredTableContent] = useState([]);
+
+  useEffect(() => {
+    getAllProjects().then((response: any) => {
+      console.log("Response on Projects is ", response.data);
+      const projectData = response.data;
+      const newData = projectData.map((item) => {
+        return {
+          title: item.title,
+          countries: item.countries[0] || "N/A",
+          body: item.body,
+          createdBy: item.createdBy,
+          createdDate: new Date(item.createdDate).toLocaleDateString(),
+        };
+      });
+      setFilteredTableContent(newData);
+    });
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -95,7 +56,6 @@ const Projects = () => {
 
   return (
     <section>
-      {/* topbar */}
       <Header title="Projects" />
       <Box
         sx={{
@@ -107,8 +67,6 @@ const Projects = () => {
           pb: 5,
         }}
       >
-        {/* <Grid container >
-                    <Grid item > */}
         <CssBaseline />
         <Container>
           <ButtonGroup
@@ -122,7 +80,7 @@ const Projects = () => {
               <FormControl sx={{ m: 1, minWidth: 170 }} size="small">
                 <InputLabel
                   id="demo-select-small-label"
-                  style={{ color: "#999" }}
+                  sx={{ color: "#999999" }}
                 >
                   Filter by sector
                 </InputLabel>
@@ -132,18 +90,17 @@ const Projects = () => {
                   label="Age"
                   sx={{ borderRadius: "35px" }}
                 >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  {domainData.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
               <FormControl sx={{ m: 1, minWidth: 170 }} size="small">
                 <InputLabel
                   id="demo-select-small-label"
-                  style={{ color: "#999" }}
+                  sx={{ color: "#999999" }}
                 >
                   Filter by region
                 </InputLabel>
@@ -153,12 +110,11 @@ const Projects = () => {
                   label="Age"
                   sx={{ borderRadius: "35px" }}
                 >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  {domainData.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -193,13 +149,12 @@ const Projects = () => {
             </Typography>
           ) : (
             <CommonTable
+              path="/projects"
               tableContent={filteredTableContent}
-              tableHeadingData={tableHeadingData}
+              tableHeadingData={projectHeadingData}
             />
           )}
         </Container>
-        {/* </Grid>
-                </Grid> */}
       </Box>
     </section>
   );

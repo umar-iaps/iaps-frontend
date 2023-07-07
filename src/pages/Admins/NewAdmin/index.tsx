@@ -9,12 +9,21 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import Header from "../../../components/Topbar/Header.js";
+import Header from "@components/Topbar/Header.js";
 import { StyledInputField, StyledTextField } from "./style.ts";
 import useStyles from "./style.ts";
+import { useParams } from "react-router-dom";
+
+const domainData = [
+  { value: "", label: "None" },
+  { value: 10, label: "Domain" },
+  { value: 20, label: "Domain1" },
+  { value: 30, label: "Domain2" },
+];
 
 const AddAdmin = () => {
   const classes = useStyles();
+  const params = useParams();
 
   return (
     <>
@@ -27,7 +36,11 @@ const AddAdmin = () => {
               <Box className={classes.main}>
                 <Box className={classes.article}>
                   <Typography variant="h4">
-                    <span className={classes.title}>Register Admin</span>
+                    {params.id ? (
+                      <span className={classes.title}>Edit Admin</span>
+                    ) : (
+                      <span className={classes.title}>Register Admin</span>
+                    )}
                   </Typography>
                 </Box>
 
@@ -82,7 +95,7 @@ const AddAdmin = () => {
                   <FormControl sx={{ m: 1, minWidth: "100%" }} size="small">
                     <InputLabel
                       id="demo-select-small-label"
-                      style={{ color: "#aaa" }}
+                      sx={{ color: "#999999" }}
                     >
                       Select a domain...
                     </InputLabel>
@@ -92,25 +105,34 @@ const AddAdmin = () => {
                       label="Age"
                       sx={{ borderRadius: "35px" }}
                     >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      {domainData.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </StyledInputField>
 
                 <StyledInputField>
-                  &nbsp;{" "}
-                  <Button
-                    sx={{ textTransform: "capitalize" }}
-                    variant="contained"
-                    className={classes.btns}
-                  >
-                    Add Admin{" "}
-                  </Button>
+                  &nbsp;
+                  {params.id ? (
+                    <Button
+                      sx={{ textTransform: "capitalize" }}
+                      variant="contained"
+                      className={classes.btns}
+                    >
+                      Update Admin
+                    </Button>
+                  ) : (
+                    <Button
+                      sx={{ textTransform: "capitalize" }}
+                      variant="contained"
+                      className={classes.btns}
+                    >
+                      Add Admin
+                    </Button>
+                  )}
                 </StyledInputField>
               </Box>
             </Grid>

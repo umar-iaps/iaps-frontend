@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Box, Grid, Typography } from "@mui/material";
-import LoginImage from "../../assets/login-side.png";
-import logo from "../../assets/iaps-logo.png";
-import Layout from "../../components/Layout";
+import LoginImage from "@assets/login-side.png";
+import logo from "@assets/iaps-logo.png";
+import { useNavigate } from "react-router-dom";
 import {
   StyledBox,
   StyledBoxInside,
@@ -11,12 +11,12 @@ import {
   StyledTextField,
   StyledTypography,
 } from "./style";
-import { login } from "../../services/Accounts/api";
+import { login } from "@services/Accounts/api";
 
 const Login = () => {
-  const [isLogin, setIsLogin] = useState(false);
   const [credentials, setCredentials] = useState({});
   const [loginError, setLoginError] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: any) => {
     const name = e.target.name;
@@ -27,20 +27,22 @@ const Login = () => {
   };
 
   const handleLogin = () => {
-    setLoginError(true);
     login(credentials)
       .then((response: any) => {
-        console.log("response is ", response);
-        localStorage.setItem("token", "83");
+        const result = response.data;
+        if (result.success) {
+          localStorage.setItem("authToken", result.dataResult.token);
+          navigate("/dashboard");
+        } else {
+          setLoginError(true);
+        }
       })
       .catch((error: any) => {
-        setLoginError(true);
+        console.log("error", error);
       });
   };
 
-  return isLogin ? (
-    <Layout>Hi, I am a child component</Layout>
-  ) : (
+  return (
     <section
       style={{
         backgroundColor: "#641C36",

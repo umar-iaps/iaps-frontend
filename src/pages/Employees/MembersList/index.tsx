@@ -1,53 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import { ButtonGroup, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import CommonTable from "../../../components/Table";
-import AddButton from "../../../components/AddButton";
-import Header from "../../../components/Topbar/Header";
+import CommonTable from "@components/Table";
+import AddButton from "@components/AddButton";
+import Header from "@components/Topbar/Header";
 import { StyledIcon, StyledSearch } from "./style";
-
-const tableData = [
-  {
-    name: "Article’s Title",
-    position: "Venezuela",
-  },
-  {
-    name: "Article’s Title",
-    position: "Venezuela",
-  },
-  {
-    name: "Article’s Title",
-    position: "Venezuela",
-  },
-  {
-    name: "Article’s Title",
-    position: "Venezuela",
-  },
-  {
-    name: "Article’s Title",
-    position: "Venezuela",
-  },
-  {
-    name: "Article’s Title",
-    position: "Venezuela",
-  },
-];
-
-// Heading
-const tableHeading = {
-  Title: "Title",
-  position: "Position",
-};
+import { getAllMembers } from "@services/Members/api";
+import { memberHeadingData } from "@utils/tableHeadings";
 
 const MembersList = () => {
-  const [tableContent, setTableContent] = useState(tableData);
-  const [tableHeadingData, setTableHeadingData] = useState(tableHeading);
-
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTableContent, setFilteredTableContent] = useState(tableData);
+  const [filteredTableContent, setFilteredTableContent] = useState([]);
+
+  useEffect(() => {
+    getAllMembers().then((response) => {
+      console.log("response on members is ", response.data);
+      const membersData = response.data;
+      const newData = membersData.map((item: any) => {
+        return {
+          fullName: item.fullName,
+          position: item.position,
+        };
+      });
+      setFilteredTableContent(newData);
+    });
+  });
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -119,8 +99,9 @@ const MembersList = () => {
             </Typography>
           ) : (
             <CommonTable
+              path="/employees"
               tableContent={filteredTableContent}
-              tableHeadingData={tableHeadingData}
+              tableHeadingData={memberHeadingData}
             />
           )}
         </Container>

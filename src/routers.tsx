@@ -1,17 +1,17 @@
-import AddAdmin from "./pages/Admins/NewAdmin";
-import MembersList from "./pages/Employees/MembersList";
-import ReportsList from "./pages/Reports/ReportsList";
-import ListJobs from "./pages/Jobs/ListJobs";
-import ArticlesList from "./pages/Articles/ArticlesList/ArticlesList";
-import AddArticle from "./pages/Articles/NewArticle";
-import Projects from "./pages/Projects/ListProjects";
-import ListAdmins from "./pages/Admins/ListAdmins";
-import AddProject from "./pages/Projects/NewProject";
-import AddJobs from "./pages/Jobs/NewJob";
-import AddEmployees from "./pages/Employees/NewEmployee";
-import AddReports from "./pages/Reports/NewReport";
-import Login from "./pages/Login";
-import Layout from "./components/Layout";
+import AddAdmin from "@pages/Admins/NewAdmin";
+import MembersList from "@pages/Employees/MembersList";
+import ReportsList from "@pages/Reports/ReportsList";
+import ListJobs from "@pages/Jobs/ListJobs";
+import ArticlesList from "@pages/Articles/ArticlesList/ArticlesList";
+import AddArticle from "@pages/Articles/NewArticle";
+import Projects from "@pages/Projects/ListProjects";
+import ListAdmins from "@pages/Admins/ListAdmins";
+import AddProject from "@pages/Projects/NewProject";
+import AddJobs from "@pages/Jobs/NewJob";
+import AddEmployees from "@pages/Employees/NewEmployee";
+import AddReports from "@pages/Reports/NewReport";
+import Login from "@pages/Login";
+import Layout from "@components/Layout";
 
 const withLayout = (Component: any) => {
   return (
@@ -47,16 +47,33 @@ export const routers = [
     element: withLayout(() => <Projects />),
   },
   {
+    path: "/projects/:id",
+    element: withLayout(() => <AddProject />),
+  },
+  {
     path: "/projects/new",
     element: withLayout(() => <AddProject />),
   },
+
   {
     path: "/articles",
     element: withLayout(() => <ArticlesList />),
   },
   {
+    path: "/articles/:id",
+    element: withLayout(AddArticle),
+  },
+  {
+    path: "/articles/new",
+    element: withLayout(AddArticle),
+  },
+  {
     path: "/jobs",
     element: withLayout(ListJobs),
+  },
+  {
+    path: "/jobs/:id",
+    element: withLayout(AddJobs),
   },
   {
     path: "/jobs/new",
@@ -67,12 +84,20 @@ export const routers = [
     element: withLayout(MembersList),
   },
   {
+    path: "/employees/:id",
+    element: withLayout(AddEmployees),
+  },
+  {
     path: "/employees/new",
     element: withLayout(AddEmployees),
   },
   {
     path: "/reports",
     element: withLayout(ReportsList),
+  },
+  {
+    path: "/reports/:id",
+    element: withLayout(AddReports),
   },
   {
     path: "/reports/new",
@@ -91,7 +116,7 @@ export const routers = [
     element: withLayout(AddAdmin),
   },
   {
-    path: "/articles/new",
-    element: withLayout(AddArticle),
+    path: "/admins/:id",
+    element: withLayout(AddAdmin),
   },
 ];

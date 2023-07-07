@@ -1,103 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import { ButtonGroup, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import CommonTable from "../../../components/Table";
-import AddButton from "../../../components/AddButton";
-import Header from "../../../components/Topbar/Header";
+import CommonTable from "@components/Table";
+import AddButton from "@components/AddButton";
+import Header from "@components/Topbar/Header";
 import { StyledIcon, StyledSearch } from "./style";
-
-const tableData = [
-  {
-    title: "title1",
-    country: "Venezuela",
-    domain: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "title2",
-    country: "Venezuela",
-    domain: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "title3",
-    country: "Venezuela",
-    domain: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    domain: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    domain: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    domain: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    domain: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    domain: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    domain: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    domain: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "Articles",
-    country: "Venezuela",
-    domain: "Domain",
-    publishDate: "02/05/23",
-  },
-  {
-    title: "title5",
-    country: "Venezuela",
-    domain: "Domain",
-    publishDate: "02/05/23",
-  },
-];
-
-// Headings
-const tableHeading = {
-  title: "Title",
-  country: "Country",
-  created: "Created by",
-  published: "Date Published",
-};
+import { getAllArticles } from "@services/Articles/api";
+import { articleHeadingData } from "@utils/tableHeadings";
 
 const ArticlesList = () => {
-  const [tableContent, setTableContent] = useState(tableData);
-  const [tableHeadingData, setTableHeadingData] = useState(tableHeading);
-
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTableContent, setFilteredTableContent] = useState(tableData);
+  const [filteredTableContent, setFilteredTableContent] = useState([]);
+
+  useEffect(() => {
+    getAllArticles().then((response) => {
+      console.log("All Articles", response.data);
+      const articleData = response.data;
+      const newData = articleData.map((item) => {
+        return {
+          title: item.title,
+          countries: item.countries[0] || "N/A",
+          createdBy: item.createdBy,
+          createdDate: new Date(item.createdDate).toLocaleDateString(),
+        };
+      });
+      setFilteredTableContent(newData);
+    });
+  }, []);
 
   const handleSearchChange = (event) => {
     const term = event.target.value;
@@ -172,8 +104,9 @@ const ArticlesList = () => {
             </Typography>
           ) : (
             <CommonTable
+              path="/articles"
               tableContent={filteredTableContent}
-              tableHeadingData={tableHeadingData}
+              tableHeadingData={articleHeadingData}
             />
           )}
         </Container>

@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import { ButtonGroup, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import CommonTable from "../../../components/Table";
-import AddButton from "../../../components/AddButton";
-import Header from "../../../components/Topbar/Header";
+import CommonTable from "@components/Table";
+import AddButton from "@components/AddButton";
+import Header from "@components/Topbar/Header";
 import { StyledIcon, StyledSearch } from "./style";
-
+import { jobHeadingData } from "@utils/tableHeadings";
 const tableData = [
   {
     name: "Article’s Title",
@@ -37,17 +37,12 @@ const tableData = [
 ];
 
 // Heading
-const tableHeading = {
-  title: "Title",
-  location: "Location",
-};
 
 const ListJobs = () => {
-  const [tableContent, setTableContent] = useState(tableData);
-  const [tableHeadingData, setTableHeadingData] = useState(tableHeading);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTableContent, setFilteredTableContent] = useState(tableData);
+
+  useEffect(() => {}, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -120,8 +115,9 @@ const ListJobs = () => {
             </Typography>
           ) : (
             <CommonTable
+              path="/jobs"
               tableContent={filteredTableContent}
-              tableHeadingData={tableHeadingData}
+              tableHeadingData={jobHeadingData}
             />
           )}
         </Container>

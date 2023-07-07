@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   TextareaAutosize,
+  Typography,
 } from "@mui/material";
 
 export const StyledTextField = styled(TextField)(() => ({
@@ -60,6 +61,13 @@ export const StyledInputField = styled(Box)(() => ({
       background: "#F2F2F2",
     },
   },
+}));
+
+export const StyledTypography = styled(Typography)(() => ({
+  fontSize: "14px",
+  color: "#333",
+  fontWeight: "600",
+  marginTop: "26px",
 }));
 
 export const StyledTextarea = styled(TextareaAutosize)(() => ({

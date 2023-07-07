@@ -24,77 +24,75 @@ const SidebarItems = () => {
   };
 
   return (
-    isSidebar && (
-      <List sx={{ marginTop: "22px" }}>
-        {sidebarData
-          ?.filter((item) => item.type === "mainPath")
-          .map((item, index) => (
-            <Link
-              to={item.path}
-              key={index}
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <ListItem disablePadding>
-                <ListItemButton
-                  disableRipple
-                  selected={selectedIndex === index}
-                  onClick={() => handleListItemClick(index)}
-                  className={
-                    selectedIndex === index
-                      ? classes.selected
-                      : classes.listItemButton
-                  }
+    <List sx={{ marginTop: "22px" }}>
+      {sidebarData
+        ?.filter((item) => item.type === "mainPath")
+        .map((item, index) => (
+          <Link
+            to={item.path}
+            key={index}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <ListItem disablePadding>
+              <ListItemButton
+                disableRipple
+                selected={selectedIndex === index}
+                onClick={() => handleListItemClick(index)}
+                className={
+                  selectedIndex === index
+                    ? classes.selected
+                    : classes.listItemButton
+                }
+              >
+                <ListItemIcon
+                  className={classes.listItemIcon}
+                  sx={{ color: "white" }}
                 >
-                  <ListItemIcon
-                    className={classes.listItemIcon}
-                    sx={{ color: "white" }}
-                  >
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={item.text} />
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          ))}
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        ))}
 
-        <br />
-        <br />
-        {/* LeftIcon */}
-        <ListItem disablePadding>
-          <ListItemButton onClick={hideSidebar}>
-            <ListItemIcon className={classes.listIcon}>
-              <ChevronLeftIcon className={classes.leftIcon} />
-            </ListItemIcon>
-            <ListItemText primary="" />
-          </ListItemButton>
-        </ListItem>
-        <br />
-        <br />
-        <br />
-        {/* setting & logout */}
-        {sidebarData
-          ?.filter((item) => item.type === "setting")
-          .map((item, index) => (
-            <Link
-              to={item.path}
-              key={index}
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <ListItem disablePadding>
-                <ListItemButton className={classes.listItemButton}>
-                  <ListItemIcon
-                    className={classes.listItemIcon}
-                    sx={{ color: "white" }}
-                  >
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={item.text} />
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          ))}
-      </List>
-    )
+      <br />
+      <br />
+      {/* LeftIcon */}
+      <ListItem disablePadding>
+        <ListItemButton>
+          <ListItemIcon className={classes.listIcon}>
+            <ChevronLeftIcon className={classes.leftIcon} />
+          </ListItemIcon>
+          <ListItemText primary="" />
+        </ListItemButton>
+      </ListItem>
+      <br />
+      <br />
+      <br />
+      {/* setting & logout */}
+      {sidebarData
+        ?.filter((item) => item.type === "setting")
+        .map((item, index) => (
+          <Link
+            to={item.path}
+            key={index}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <ListItem disablePadding>
+              <ListItemButton className={classes.listItemButton}>
+                <ListItemIcon
+                  className={classes.listItemIcon}
+                  sx={{ color: "white" }}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        ))}
+    </List>
   );
 };
 

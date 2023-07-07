@@ -11,12 +11,12 @@ import {
   Typography,
 } from "@mui/material";
 import useStyles from "./style.ts";
-import avator from "../../../assets/Avatar.svg";
-import upload from "../../../assets/Group 15.png";
-import publish from "../../../assets/publish.svg";
-import view from "../../../assets/view.svg";
-import Header from "../../../components/Topbar/Header.tsx";
-import { Link } from "react-router-dom";
+import avator from "@assets/Avatar.svg";
+import upload from "@assets/Group 15.png";
+import publish from "@assets/publish.svg";
+import view from "@assets/view.svg";
+import Header from "@components/Topbar/Header.tsx";
+import { Link, useParams } from "react-router-dom";
 import {
   StyledButton,
   StyledInputField,
@@ -24,9 +24,17 @@ import {
   StyledTextarea,
 } from "./style.ts";
 
+const domainData = [
+  { value: "", label: "None" },
+  { value: 10, label: "Domain" },
+  { value: 20, label: "Domain1" },
+  { value: 30, label: "Domain2" },
+];
+
 const AddJobs = () => {
   const classes = useStyles();
-
+  const params = useParams();
+  console.log("id", params.id);
   return (
     <>
       <Header title="Jobs" />
@@ -37,7 +45,11 @@ const AddJobs = () => {
               <Box className={classes.main}>
                 <Box className={classes.article}>
                   <Typography variant="h4">
-                    <span className={classes.title}>Add job</span>
+                    {params.id ? (
+                      <span className={classes.title}> Edit Job</span>
+                    ) : (
+                      <span className={classes.title}> Add Job</span>
+                    )}
                   </Typography>
                   <Link to="/jobs">
                     <img src={avator} alt="" width={45} />
@@ -210,12 +222,11 @@ const AddJobs = () => {
                       label="Age"
                       sx={{ borderRadius: "35px" }}
                     >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      {domainData.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </StyledInputField>
@@ -286,7 +297,7 @@ const AddJobs = () => {
                         src={view}
                         alt="preview"
                       />{" "}
-                      &nbsp; Preview Article
+                      &nbsp; Preview Job
                     </StyledButton>
                     <StyledButton
                       variant="contained"
@@ -300,7 +311,8 @@ const AddJobs = () => {
                         src={publish}
                         alt="preview"
                       />{" "}
-                      &nbsp; Publish Article
+                      &nbsp;{" "}
+                      {params.id ? <> Update Job </> : <> Publish Job </>}
                     </StyledButton>
                   </Box>
                 </StyledInputField>

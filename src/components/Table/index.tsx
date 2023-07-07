@@ -1,51 +1,42 @@
-import React, { useState } from "react";
+import { useState } from "react";
+
 import {
-  Box,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
-import Container from "@mui/material/Container";
-import {
-  Button,
-  ButtonGroup,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
+  Box,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import edit from "../../assets/edit.svg";
 import deletes from "../../assets/delete.svg";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 
-const CommonTable = (props) => {
-  const { tableContent, tableHeadingData } = props;
-
+const CommonTable = (props: any) => {
+  const { tableContent, tableHeadingData, path } = props;
+  const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const rowsPerPage = 5;
-  const [selectedMember, setSelectedMember] = useState(null);
 
   const pageCount = Math.ceil(tableContent.length / rowsPerPage);
 
-  const handlePageChange = (newPage: number) => {
+  const handlePageChange = (newPage: any) => {
     setPage(newPage);
   };
-
-  const handleEdit = (index: number) => {
-    setSelectedMember(rows[page * rowsPerPage + index]);
+  // edit case
+  const handleEdit = (id: any) => {
+    console.log(id, path);
+    navigate(`${path}/${id}`);
   };
 
-  const handleDelete = (index: number) => {
-    const memberToDelete = rows[page * rowsPerPage + index];
+  // delete case
+  const handleDelete = (id: any) => {
+    console.log("id", id);
   };
+
   return (
     <>
       <TableContainer>
@@ -53,11 +44,13 @@ const CommonTable = (props) => {
           {/* Heading */}
           <TableHead>
             <TableRow>
-              {Object.values(tableHeadingData).map((heading, index) => (
-                <TableCell key={index} sx={{ fontWeight: 600 }}>
-                  {heading}
-                </TableCell>
-              ))}
+              {Object.values(tableHeadingData).map(
+                (heading: any, index: any) => (
+                  <TableCell key={index} sx={{ fontWeight: 600 }}>
+                    {heading}
+                  </TableCell>
+                )
+              )}
               <TableCell
                 sx={{ fontWeight: 600, marginRight: "20px" }}
                 align="center"
@@ -70,23 +63,33 @@ const CommonTable = (props) => {
           <TableBody>
             {tableContent
               ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((content, index) => (
+              .map((content: any, index: any) => (
                 <TableRow
                   key={index}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  {Object.values(content).map((value, index) => (
-                    <TableCell key={index} component="td" scope="row">
-                      {value}
-                    </TableCell>
-                  ))}
+                  {Object.entries(content).map(([key, value], index) => {
+                    if (key !== "id") {
+                      return (
+                        <TableCell key={index} component="td" scope="row">
+                          {value}
+                        </TableCell>
+                      );
+                    }
+                    return null;
+                  })}
                   <TableCell align="center" sx={{ marginRight: 0 }}>
-                    <img src={edit} alt="" onClick={() => handleEdit(index)} />
+                    <img
+                      style={{ cursor: "pointer" }}
+                      src={edit}
+                      alt=""
+                      onClick={() => handleEdit(content.id)}
+                    />
                     <img
                       src={deletes}
                       alt=""
-                      onClick={() => handleDelete(index)}
-                      style={{ marginLeft: "12px" }}
+                      onClick={() => handleDelete(content.id)}
+                      style={{ marginLeft: "12px", cursor: "pointer" }}
                     />
                   </TableCell>
                 </TableRow>

@@ -68,7 +68,7 @@ const useStyles = makeStyles(() => ({
     textAlign: "center",
   },
   btns: {
-    borderRadius: "26px",
+    borderRadius: "26px !important",
     background: "#C64B68 !important",
     boxShadow: "0px 3px 5px 0px rgba(128, 128, 128, 0.35)",
     width: "178.33px !important",

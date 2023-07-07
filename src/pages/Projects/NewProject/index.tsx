@@ -11,12 +11,12 @@ import {
   Typography,
 } from "@mui/material";
 import useStyles from "./style.ts";
-import avator from "../../../assets/Avatar.svg";
-import upload from "../../../assets/Group 15.png";
-import publish from "../../../assets/publish.svg";
-import view from "../../../assets/view.svg";
-import Header from "../../../components/Topbar/Header.tsx";
-import { Link } from "react-router-dom";
+import avator from "@assets/Avatar.svg";
+import upload from "@assets/Group 15.png";
+import publish from "@assets/publish.svg";
+import view from "@assets/view.svg";
+import Header from "@components/Topbar/Header.tsx";
+import { Link, useParams } from "react-router-dom";
 import {
   StyledButton,
   StyledInputField,
@@ -24,11 +24,21 @@ import {
   StyledTextarea,
 } from "./style.ts";
 
+const domainData = [
+  { value: "", label: "None" },
+  { value: 10, label: "Domain" },
+  { value: 20, label: "Domain1" },
+  { value: 30, label: "Domain2" },
+];
+
 const AddProject = () => {
   const classes = useStyles();
+  const params = useParams();
+  console.log("id", params.id);
 
   return (
     <>
+      {/* Header */}
       <Header title="Projects" />
       <section style={{ marginTop: "30px", marginBottom: "66px" }}>
         <Container>
@@ -37,7 +47,11 @@ const AddProject = () => {
               <Box className={classes.main}>
                 <Box className={classes.article}>
                   <Typography variant="h4">
-                    <span className={classes.title}>Add Project</span>
+                    {params.id ? (
+                      <span className={classes.title}>Edit Project</span>
+                    ) : (
+                      <span className={classes.title}>Add Project</span>
+                    )}
                   </Typography>
                   <Link to="/projects">
                     <img src={avator} alt="" width={45} />
@@ -78,7 +92,6 @@ const AddProject = () => {
                   </Typography>
 
                   <StyledTextarea
-                    rows={8}
                     minRows={8}
                     placeholder="Enter article body..."
                     sx={{
@@ -111,7 +124,7 @@ const AddProject = () => {
                       id="demo-select-small-label"
                       sx={{ color: "#999999" }}
                     >
-                      Select a country
+                      Select a Country
                     </InputLabel>
                     <Select
                       labelId="demo-select-small-label"
@@ -119,12 +132,11 @@ const AddProject = () => {
                       label="Age"
                       sx={{ borderRadius: "35px" }}
                     >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      {domainData.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </StyledInputField>
@@ -147,20 +159,19 @@ const AddProject = () => {
                       id="demo-select-small-label"
                       sx={{ color: "#999999" }}
                     >
-                      Select a sectors
+                      Select a Sector
                     </InputLabel>
                     <Select
                       labelId="demo-select-small-label"
                       id="demo-select-small"
-                      label="Age"
+                      // label="Age"
                       sx={{ borderRadius: "35px" }}
                     >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      {domainData.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </StyledInputField>
@@ -230,7 +241,7 @@ const AddProject = () => {
                         src={view}
                         alt="preview"
                       />{" "}
-                      &nbsp; Preview Article
+                      &nbsp; Preview Project
                     </StyledButton>
                     <StyledButton
                       variant="contained"
@@ -244,7 +255,12 @@ const AddProject = () => {
                         src={publish}
                         alt="preview"
                       />{" "}
-                      &nbsp; Publish Article
+                      &nbsp;{" "}
+                      {params.id ? (
+                        <> Update Project </>
+                      ) : (
+                        <> Publish Project </>
+                      )}
                     </StyledButton>
                   </Box>
                 </StyledInputField>
