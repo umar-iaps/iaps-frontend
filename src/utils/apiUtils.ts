@@ -26,7 +26,7 @@ export const post = async (url: string, data = {}, config = {}) => {
 
 export const put = async (url: string, data = {}, config = {}) => {
   try {
-    const response = await api.put(
+    const response = await api.post(
       `${import.meta.env.VITE_API_URL}/${url}`,
       data,
       config
@@ -37,10 +37,11 @@ export const put = async (url: string, data = {}, config = {}) => {
   }
 };
 
-export const remove = async (url: string, config = {}) => {
+export const remove = async (url: string, data: any, config = {}) => {
   try {
-    const response = await api.delete(
+    const response = await api.post(
       `${import.meta.env.VITE_API_URL}/${url}`,
+      data,
       config
     );
     return { type: "success", data: response.data };

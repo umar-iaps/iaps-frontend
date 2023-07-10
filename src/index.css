@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
- :root {
-  font-family: 'Poppins', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap");
+:root {
+  font-family: "Poppins", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   /* line-height: 1.5; */
   /* font-weight: 400; */
 
@@ -15,14 +15,13 @@
   -webkit-text-size-adjust: 100%;
 }
 
-*{
+* {
   box-sizing: border-box;
 }
 
-body{
+body {
   margin: 0;
 }
-
 
 /* body {
   margin: 0;
@@ -44,14 +43,24 @@ body{
 }
 /* pagination css */
 .css-19xm0h7-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
-    background-color: #808080 !important;
-    color:white !important;
-     border: none !important;
+  background-color: #808080 !important;
+  color: white !important;
+  border: none !important;
 }
 .css-19xm0h7-MuiButtonBase-root-MuiPaginationItem-root {
-   background-color: #F0F0F0 !important;
-    border: none !important;
+  background-color: #f0f0f0 !important;
+  border: none !important;
 }
-.css-wjh20t-MuiPagination-ul ul li{
+.css-wjh20t-MuiPagination-ul ul li {
   margin-left: 12px !important;
+}
+
+.css-n1hre1-MuiPaper-root-MuiAppBar-root {
+  z-index: inherit !important;
+}
+@media screen and (max-width: 768px) {
+  .css-v76mho-MuiButtonGroup-root {
+    display: flex;
+    flex-direction: column;
+  }
 }

@@ -10,6 +10,8 @@ import Header from "@components/Topbar/Header";
 import { StyledIcon, StyledSearch } from "./style";
 import { getAllProjects } from "@services/Projects/api";
 import { projectHeadingData } from "@utils/tableHeadings";
+import { useNavigate } from "react-router-dom";
+import { deleteProject } from "../../../services/Projects/api";
 
 const domainData = [
   { value: "", label: "None" },
@@ -19,8 +21,16 @@ const domainData = [
 ];
 
 const Projects = () => {
+  const [tableData, setTableData] = useState([]);
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTableContent, setFilteredTableContent] = useState([]);
+  const [filteredTableContent, setFilteredTableContent] = useState(tableData);
+
+  useEffect(() => {
+    if (searchTerm == "") {
+      setFilteredTableContent(tableData);
+    }
+  }, [searchTerm]);
 
   useEffect(() => {
     getAllProjects().then((response: any) => {
@@ -28,6 +38,7 @@ const Projects = () => {
       const projectData = response.data;
       const newData = projectData.map((item) => {
         return {
+          id: item.id,
           title: item.title,
           countries: item.countries[0] || "N/A",
           body: item.body,
@@ -35,6 +46,7 @@ const Projects = () => {
           createdDate: new Date(item.createdDate).toLocaleDateString(),
         };
       });
+      setTableData(newData);
       setFilteredTableContent(newData);
     });
   }, []);
@@ -44,11 +56,27 @@ const Projects = () => {
     filterTableContent(event.target.value);
   };
 
+  const handleEdit = (id: any) => {
+    navigate(`/projects/${id}`);
+  };
+
+  const handleDelete = (id: any) => {
+    console.log("Delete the entry", id);
+    const delObj = { id };
+
+    deleteProject(delObj).then((response) => {
+      console.log("response from delete is ", response);
+      let newData = filteredTableContent.filter((item) => {
+        return item.id !== id;
+      });
+      setFilteredTableContent(newData);
+    });
+  };
+
   const filterTableContent = (term: any) => {
-    const filteredData = tableData.filter(
+    const filteredData = filteredTableContent.filter(
       (item) =>
         item.title.toLowerCase().includes(term.toLowerCase()) ||
-        item.country.toLowerCase().includes(term.toLowerCase()) ||
         item.body.toLowerCase().includes(term.toLowerCase())
     );
     setFilteredTableContent(filteredData);
@@ -152,6 +180,8 @@ const Projects = () => {
               path="/projects"
               tableContent={filteredTableContent}
               tableHeadingData={projectHeadingData}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           )}
         </Container>

@@ -3,17 +3,27 @@ import { Box } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import { ButtonGroup, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CommonTable from "@components/Table";
 import AddButton from "@components/AddButton";
 import Header from "@components/Topbar/Header";
 import { StyledIcon, StyledSearch } from "./style";
 import { getAllMembers } from "@services/Members/api";
 import { memberHeadingData } from "@utils/tableHeadings";
+import { deleteMember } from "../../../services/Members/api";
 
 const MembersList = () => {
+  const [tableData, setTableData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTableContent, setFilteredTableContent] = useState([]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (searchTerm == "") {
+      setFilteredTableContent(tableData);
+    }
+  }, [searchTerm]);
 
   useEffect(() => {
     getAllMembers().then((response) => {
@@ -21,23 +31,36 @@ const MembersList = () => {
       const membersData = response.data;
       const newData = membersData.map((item: any) => {
         return {
+          id: item.id,
           fullName: item.fullName,
           position: item.position,
         };
       });
+      setTableData(newData);
       setFilteredTableContent(newData);
     });
-  });
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
     filterTableContent(event.target.value);
   };
+  const handleEdit = (id: any) => {
+    navigate(`/employees/${id}`);
+  };
+
+  const handleDelete = (id: any) => {
+    console.log("Delete the entry", id);
+    const delObj = { id };
+    deleteMember(delObj).then((response) => {
+      console.log("response from delete is ", response);
+    });
+  };
 
   const filterTableContent = (term) => {
     const filteredData = tableData.filter(
       (item) =>
-        item.name.toLowerCase().includes(term.toLowerCase()) ||
+        item.fullName.toLowerCase().includes(term.toLowerCase()) ||
         item.position.toLowerCase().includes(term.toLowerCase())
     );
     setFilteredTableContent(filteredData);
@@ -92,7 +115,6 @@ const MembersList = () => {
           >
             Members
           </Typography>
-          {/* table */}
           {filteredTableContent.length === 0 ? (
             <Typography variant="body1" sx={{ textAlign: "center" }}>
               No records are found!
@@ -102,6 +124,8 @@ const MembersList = () => {
               path="/employees"
               tableContent={filteredTableContent}
               tableHeadingData={memberHeadingData}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           )}
         </Container>

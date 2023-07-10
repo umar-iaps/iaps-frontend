@@ -16,7 +16,7 @@ import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
 
 const CommonTable = (props: any) => {
-  const { tableContent, tableHeadingData, path } = props;
+  const { tableContent, tableHeadingData, path, onEdit, onDelete } = props;
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const rowsPerPage = 5;
@@ -27,10 +27,10 @@ const CommonTable = (props: any) => {
     setPage(newPage);
   };
   // edit case
-  const handleEdit = (id: any) => {
-    console.log(id, path);
-    navigate(`${path}/${id}`);
-  };
+  // const handleEdit = (id: any) => {
+  //   console.log(id, path);
+  //   navigate(`${path}/${id}`);
+  // };
 
   // delete case
   const handleDelete = (id: any) => {
@@ -83,13 +83,14 @@ const CommonTable = (props: any) => {
                       style={{ cursor: "pointer" }}
                       src={edit}
                       alt=""
-                      onClick={() => handleEdit(content.id)}
+                      onClick={() => onEdit(content.id)}
                     />
                     <img
                       src={deletes}
                       alt=""
-                      onClick={() => handleDelete(content.id)}
+                      // onClick={() => handleDelete(content.id)}
                       style={{ marginLeft: "12px", cursor: "pointer" }}
+                      onClick={() => onDelete(content.id)}
                     />
                   </TableCell>
                 </TableRow>

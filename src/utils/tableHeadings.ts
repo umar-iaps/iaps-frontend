@@ -30,3 +30,9 @@ export const reportHeadingData = {
   regions: "Regions",
   year: "Year",
 };
+
+export const adminHeadingData = {
+  name: "Full name",
+  email: "Email",
+  domains: "Domains",
+};

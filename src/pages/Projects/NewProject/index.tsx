@@ -23,18 +23,66 @@ import {
   StyledTextField,
   StyledTextarea,
 } from "./style.ts";
-
-const domainData = [
-  { value: "", label: "None" },
-  { value: 10, label: "Domain" },
-  { value: 20, label: "Domain1" },
-  { value: 30, label: "Domain2" },
-];
+import { useEffect, useState } from "react";
+import {
+  addProject,
+  getProjectById,
+  updateProject,
+} from "../../../services/Projects/api.ts";
+import { getAllCountries } from "../../../services/Countries/api.ts";
+import { getAllSectors } from "../../../services/Sectors/api.ts";
 
 const AddProject = () => {
   const classes = useStyles();
   const params = useParams();
-  console.log("id", params.id);
+  // const [domainData, setDomainData] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const [sectors, setSectors] = useState([]);
+  const [data, setData] = useState({});
+
+  useEffect(() => {
+    getAllCountries().then((response) => {
+      console.log("response is ", response);
+      setCountries(response.data);
+    });
+
+    getAllSectors().then((response) => {
+      console.log("Sectors is ", response.data);
+      setSectors(response.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    getProjectById(params.id).then((response) => {
+      console.log("project data by id is ", response.data);
+      setData(response.data);
+    });
+  }, []);
+
+  const handleChange = (e: any) => {
+    const name = e.target.name;
+    let value = e.target.value;
+    let newArr: any = [];
+    if (name == "countries" || name == "sectors") {
+      value = [...newArr, value];
+    }
+    setData((set) => {
+      return { ...set, [name]: value };
+    });
+  };
+
+  const handleImages = (e) => {
+    const file = e.target.files[0];
+    console.log("Files is ", file);
+  };
+
+  const publishProject = () => {
+    if (params.id) {
+      updateProject();
+    } else {
+      addProject(formData);
+    }
+  };
 
   return (
     <>
@@ -67,7 +115,10 @@ const AddProject = () => {
                     <span className={classes.title2}>Title</span>
                   </Typography>
                   <StyledTextField
+                    value={data?.title}
+                    onChange={handleChange}
                     type="text"
+                    name="title"
                     fullWidth
                     placeholder=" Enter a title"
                     id="fullWidth"
@@ -92,8 +143,11 @@ const AddProject = () => {
                   </Typography>
 
                   <StyledTextarea
+                    name="body"
+                    onChange={handleChange}
                     minRows={8}
                     placeholder="Enter article body..."
+                    value={data?.body}
                     sx={{
                       width: "100%",
                       padding: "13.5px 14px",
@@ -124,17 +178,20 @@ const AddProject = () => {
                       id="demo-select-small-label"
                       sx={{ color: "#999999" }}
                     >
-                      Select a Country
+                      Select a Country...
                     </InputLabel>
                     <Select
                       labelId="demo-select-small-label"
+                      name="countries"
+                      value={data?.countries}
+                      onChange={handleChange}
                       id="demo-select-small"
                       label="Age"
                       sx={{ borderRadius: "35px" }}
                     >
-                      {domainData.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {countries.map((option) => (
+                        <MenuItem key={option?.id} value={option?.name}>
+                          {option?.name}
                         </MenuItem>
                       ))}
                     </Select>
@@ -159,17 +216,20 @@ const AddProject = () => {
                       id="demo-select-small-label"
                       sx={{ color: "#999999" }}
                     >
-                      Select a Sector
+                      Select a Sector...
                     </InputLabel>
                     <Select
                       labelId="demo-select-small-label"
                       id="demo-select-small"
+                      name="sectors"
+                      value={data?.sectors}
+                      onChange={handleChange}
                       // label="Age"
                       sx={{ borderRadius: "35px" }}
                     >
-                      {domainData.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {sectors.map((option) => (
+                        <MenuItem key={option?.id} value={option?.name}>
+                          {option?.name}
                         </MenuItem>
                       ))}
                     </Select>
@@ -221,7 +281,13 @@ const AddProject = () => {
                       >
                         Upload your images here
                       </Typography>
-                      <input hidden accept="image/*" multiple type="file" />
+                      <input
+                        hidden
+                        accept="image/*"
+                        onChange={handleImages}
+                        multiple
+                        type="file"
+                      />
                     </Button>
                   </Stack>{" "}
                   <br />
@@ -245,6 +311,7 @@ const AddProject = () => {
                     </StyledButton>
                     <StyledButton
                       variant="contained"
+                      onClick={publishProject}
                       sx={{ textTransform: "none" }}
                     >
                       <img

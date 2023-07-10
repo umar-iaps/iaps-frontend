@@ -12,7 +12,7 @@ import AddButton from "@components/AddButton";
 import Header from "@components/Topbar/Header";
 import { StyledSearch, StyledIcon } from "./style";
 import { getAdmins } from "@services/Admin/api";
-
+import { adminHeadingData } from "@utils/tableHeadings.ts";
 const tableData = [
   {
     title: "Article’s Title",
@@ -46,15 +46,8 @@ const tableData = [
   },
 ];
 
-const tableHeading = {
-  name: "Full name",
-  email: "Email",
-  domains: "Domains",
-};
-
 const LastAdmins = () => {
   const [tableContent, setTableContent] = useState(tableData);
-  const [tableHeadingData, setTableHeadingData] = useState(tableHeading);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTableContent, setFilteredTableContent] = useState(tableData);
@@ -139,7 +132,7 @@ const LastAdmins = () => {
             <CommonTable
               path="/admins"
               tableContent={filteredTableContent}
-              tableHeadingData={tableHeadingData}
+              tableHeadingData={adminHeadingData}
             />
           )}
         </Container>

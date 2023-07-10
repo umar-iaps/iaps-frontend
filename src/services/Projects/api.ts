@@ -21,7 +21,7 @@ export const getAllProjectsByDomainId = async (domainId: any) => {
 export const getProjectById = async (id: string) => {
   try {
     const response = await get(`${baseURL}/getById/${id}`);
-    return { type: "success", data: response.data };
+    return { type: "success", data: response.data.dataResult };
   } catch (error) {
     return { type: "error", data: error };
   }

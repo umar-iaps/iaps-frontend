@@ -3,17 +3,27 @@ import { Box } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import { ButtonGroup, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CommonTable from "@components/Table";
 import AddButton from "@components/AddButton";
 import Header from "@components/Topbar/Header";
 import { StyledIcon, StyledSearch } from "./style";
 import { getAllArticles } from "@services/Articles/api";
 import { articleHeadingData } from "@utils/tableHeadings";
+import { deleteArticle } from "../../../services/Articles/api";
 
 const ArticlesList = () => {
+  const [tableData, setTableData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTableContent, setFilteredTableContent] = useState([]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (searchTerm == "") {
+      setFilteredTableContent(tableData);
+    }
+  }, [searchTerm]);
 
   useEffect(() => {
     getAllArticles().then((response) => {
@@ -21,12 +31,14 @@ const ArticlesList = () => {
       const articleData = response.data;
       const newData = articleData.map((item) => {
         return {
+          id: item.id,
           title: item.title,
           countries: item.countries[0] || "N/A",
           createdBy: item.createdBy,
           createdDate: new Date(item.createdDate).toLocaleDateString(),
         };
       });
+      setTableData(newData);
       setFilteredTableContent(newData);
     });
   }, []);
@@ -36,12 +48,23 @@ const ArticlesList = () => {
     setSearchTerm(term);
     filterTableContent(term);
   };
+  const handleEdit = (id: any) => {
+    navigate(`/articles/${id}`);
+  };
+
+  const handleDelete = (id: any) => {
+    console.log("Delete the entry", id);
+    const delObj = { id };
+    deleteArticle(delObj).then((response) => {
+      console.log("response from delete is ", response);
+    });
+  };
 
   const filterTableContent = (term) => {
     const filteredData = tableData.filter(
       (item) =>
         item.title.toLowerCase().includes(term.toLowerCase()) ||
-        item.country.toLowerCase().includes(term.toLowerCase())
+        item.createdBy.toLowerCase().includes(term.toLowerCase())
     );
     setFilteredTableContent(filteredData);
   };
@@ -107,6 +130,8 @@ const ArticlesList = () => {
               path="/articles"
               tableContent={filteredTableContent}
               tableHeadingData={articleHeadingData}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           )}
         </Container>

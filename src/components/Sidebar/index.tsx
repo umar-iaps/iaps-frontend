@@ -9,9 +9,13 @@ const Sidebar = () => {
         // display: "none",
         backgroundColor: "#641c36",
         color: "whitesmoke",
-        minWidth: 340,
-        maxWidth: 340,
+        minWidth: 353,
+        maxWidth: 353,
+        position: "fixed",
+        left: 0,
+        height: "100vh",
         minHeight: "100vh",
+        overflowY: "scroll",
       }}
     >
       <img

@@ -111,7 +111,7 @@ const AddEmployees = () => {
 
                   <StyledTextarea
                     minRows={8}
-                    placeholder="Enter article bio..."
+                    placeholder="Enter bio..."
                     sx={{
                       width: "100%",
                       padding: "13.5px 14px",
@@ -133,7 +133,7 @@ const AddEmployees = () => {
                       marginTop: "16px",
                     }}
                   >
-                    <span className={classes.title2}>&nbsp;&nbsp; Domains</span>
+                    <span className={classes.title2}>&nbsp;&nbsp; Domain</span>
                   </Typography>
 
                   <FormControl sx={{ m: 1, minWidth: 455 }} size="small">
@@ -141,7 +141,7 @@ const AddEmployees = () => {
                       id="demo-select-small-label"
                       sx={{ color: "#999999" }}
                     >
-                      Select a domains
+                      Select a domain...
                     </InputLabel>
                     <Select
                       labelId="demo-select-small-label"

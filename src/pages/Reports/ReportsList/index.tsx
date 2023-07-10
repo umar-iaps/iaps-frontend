@@ -3,13 +3,14 @@ import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import { ButtonGroup, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CommonTable from "@components/Table";
 import AddButton from "@components/AddButton";
 import Header from "@components/Topbar/Header";
 import { StyledIcon, StyledSearch } from "./style";
 import { getAllReports } from "@services/Reports/api";
 import { reportHeadingData } from "@utils/tableHeadings";
+import { deleteReport } from "../../../services/Reports/api";
 
 const domainData = [
   { value: "", label: "None" },
@@ -19,8 +20,17 @@ const domainData = [
 ];
 
 const ReportsList = () => {
+  const [tableData, setTableData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTableContent, setFilteredTableContent] = useState([]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (searchTerm == "") {
+      setFilteredTableContent(tableData);
+    }
+  }, [searchTerm]);
 
   useEffect(() => {
     getAllReports().then((response) => {
@@ -28,6 +38,7 @@ const ReportsList = () => {
       const reportsData = response.data;
       const newData = reportsData.map((item: any) => {
         return {
+          id: item.id,
           title: item.title,
           expertize: item.expertize,
           sectors: item.sectors[0] || "N/A",
@@ -35,21 +46,33 @@ const ReportsList = () => {
           year: item.year,
         };
       });
+      setTableData(newData);
       setFilteredTableContent(newData);
     });
-  });
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
     filterTableContent(event.target.value);
   };
 
+  const handleEdit = (id: any) => {
+    navigate(`/reports/${id}`);
+  };
+
+  const handleDelete = (id: any) => {
+    console.log("Delete the entry", id);
+    const delObj = { id };
+    deleteReport(delObj).then((response) => {
+      console.log("response from delete is ", response);
+    });
+  };
+
   const filterTableContent = (term) => {
     const filteredData = tableData.filter(
       (item) =>
         item.title.toLowerCase().includes(term.toLowerCase()) ||
-        item.country.toLowerCase().includes(term.toLowerCase()) ||
-        item.body.toLowerCase().includes(term.toLowerCase())
+        item.expertize.toLowerCase().includes(term.toLowerCase())
     );
     setFilteredTableContent(filteredData);
   };
@@ -174,6 +197,8 @@ const ReportsList = () => {
               path="/reports"
               tableContent={filteredTableContent}
               tableHeadingData={reportHeadingData}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           )}
         </Container>
