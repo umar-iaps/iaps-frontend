@@ -78,132 +78,134 @@ const ReportsList = () => {
   };
 
   return (
-    <section>
+    <Box sx={{ mb: 5 }}>
       <Header title="Reports" />
-      <Box
-        sx={{
-          padding: "8px",
-          bgcolor: "#FFFFFF",
-          borderRadius: "30px",
-          margin: "34px auto",
-          maxWidth: "890px",
-          pb: 5,
-        }}
-      >
-        <CssBaseline />
-        <Container>
-          <ButtonGroup
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              margin: "2px",
-            }}
-          >
-            <Box sx={{ mt: 2 }}>
-              <FormControl sx={{ m: 1, minWidth: 170 }} size="small">
-                <InputLabel
-                  id="demo-select-small-label"
-                  sx={{ color: "#999999" }}
-                >
-                  Select a domain
-                </InputLabel>
-                <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  label="Age"
-                  sx={{ borderRadius: "35px" }}
-                >
-                  {domainData.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+      <center>
+        <Box
+          sx={{
+            padding: "8px",
+            bgcolor: "#FFFFFF",
+            borderRadius: "30px",
+            maxWidth: "95%",
+            margin: "39px 40px 0px 155px",
+            pb: 5,
+          }}
+        >
+          <CssBaseline />
+          <Container>
+            <ButtonGroup
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                margin: "2px",
+              }}
+            >
+              <Box sx={{ mt: 2 }}>
+                <FormControl sx={{ m: 1, minWidth: 170 }} size="small">
+                  <InputLabel
+                    id="demo-select-small-label"
+                    sx={{ color: "#999999" }}
+                  >
+                    Select a domain
+                  </InputLabel>
+                  <Select
+                    labelId="demo-select-small-label"
+                    id="demo-select-small"
+                    label="Age"
+                    sx={{ borderRadius: "35px" }}
+                  >
+                    {domainData.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
 
-              <FormControl sx={{ m: 1, minWidth: 170 }} size="small">
-                <InputLabel
-                  id="demo-select-small-label"
-                  sx={{ color: "#999999" }}
-                >
-                  Filter by region
-                </InputLabel>
-                <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  label="Age"
-                  sx={{ borderRadius: "35px" }}
-                >
-                  {domainData.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl sx={{ m: 1, minWidth: 170 }} size="small">
-                <InputLabel
-                  id="demo-select-small-label"
-                  sx={{ color: "#999999" }}
-                >
-                  Filter by Year
-                </InputLabel>
-                <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  label="Age"
-                  sx={{ borderRadius: "35px" }}
-                >
-                  {domainData.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                <FormControl sx={{ m: 1, minWidth: 170 }} size="small">
+                  <InputLabel
+                    id="demo-select-small-label"
+                    sx={{ color: "#999999" }}
+                  >
+                    Filter by region
+                  </InputLabel>
+                  <Select
+                    labelId="demo-select-small-label"
+                    id="demo-select-small"
+                    label="Age"
+                    sx={{ borderRadius: "35px" }}
+                  >
+                    {domainData.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl sx={{ m: 1, minWidth: 170 }} size="small">
+                  <InputLabel
+                    id="demo-select-small-label"
+                    sx={{ color: "#999999" }}
+                  >
+                    Filter by Year
+                  </InputLabel>
+                  <Select
+                    labelId="demo-select-small-label"
+                    id="demo-select-small"
+                    label="Age"
+                    sx={{ borderRadius: "35px" }}
+                  >
+                    {domainData.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+              <Link to="/reports/new">
+                <AddButton title="Add New Report" />
+              </Link>
+            </ButtonGroup>
+            <Box sx={{ textAlign: "left" }}>
+              <StyledSearch
+                placeholder="Search"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                InputProps={{ endAdornment: <StyledIcon /> }}
+              />
             </Box>
-            <Link to="/reports/new">
-              <AddButton title="Add New Report" />
-            </Link>
-          </ButtonGroup>
-          <Box>
-            <StyledSearch
-              placeholder="Search"
-              value={searchTerm}
-              onChange={handleSearchChange}
-              InputProps={{ endAdornment: <StyledIcon /> }}
-            />
-          </Box>
-          <Typography
-            variant="h6"
-            sx={{
-              backgroundColor: "#FFF4F7;",
-              fontWeight: 600,
-              paddingLeft: "18px",
-              // width: "810px",
-              color: "#641C36",
-              margin: "10px",
-              marginTop: "33px",
-            }}
-          >
-            Published Reports
-          </Typography>
-          {filteredTableContent.length === 0 ? (
-            <Typography variant="body1" sx={{ textAlign: "center" }}>
-              No records are found!
+            <Typography
+              variant="h6"
+              sx={{
+                backgroundColor: "#FFF4F7;",
+                fontWeight: 600,
+                paddingLeft: "18px",
+                // width: "810px",
+                color: "#641C36",
+                margin: "10px",
+                marginTop: "33px",
+              }}
+            >
+              Published Reports
             </Typography>
-          ) : (
-            <CommonTable
-              path="/reports"
-              tableContent={filteredTableContent}
-              tableHeadingData={reportHeadingData}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          )}
-        </Container>
-      </Box>
-    </section>
+            {filteredTableContent.length === 0 ? (
+              <Typography variant="body1" sx={{ textAlign: "center" }}>
+                No records are found!
+              </Typography>
+            ) : (
+              <CommonTable
+                path="/reports"
+                tableContent={filteredTableContent}
+                tableHeadingData={reportHeadingData}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            )}
+          </Container>
+        </Box>
+      </center>
+    </Box>
   );
 };
 

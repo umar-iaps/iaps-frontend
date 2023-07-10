@@ -73,71 +73,74 @@ const LastAdmins = () => {
   };
 
   return (
-    <section>
+    <Box sx={{ mb: 5 }}>
       <Header title="Admin" />
-      <Box
-        sx={{
-          padding: "8px",
-          bgcolor: "#FFFFFF",
-          borderRadius: "30px",
-          margin: "34px auto",
-          maxWidth: "890px",
-          pb: 5,
-        }}
-      >
-        <CssBaseline />
-        <Container>
-          <ButtonGroup
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              margin: "2px",
-            }}
-          >
-            <Box sx={{ mt: 2 }}>
-              <StyledSearch
-                placeholder="Search"
-                InputProps={{ endAdornment: <StyledIcon /> }}
-                onChange={handleSearchChange}
-                value={searchTerm}
-              />
-            </Box>
-            {/* Button */}
-            <Link to="/admins/new">
-              <AddButton title="Add New Admin" />
-            </Link>
-          </ButtonGroup>
+      <center>
+        <Box
+          sx={{
+            padding: "8px",
+            bgcolor: "#FFFFFF",
+            borderRadius: "30px",
+            maxWidth: "95%",
+            margin: "39px 40px 0px 155px",
+            pb: 5,
+          }}
+        >
+          <CssBaseline />
+          <Container>
+            <ButtonGroup
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                margin: "2px",
+              }}
+            >
+              <Box sx={{ mt: 2 }}>
+                <StyledSearch
+                  placeholder="Search"
+                  InputProps={{ endAdornment: <StyledIcon /> }}
+                  onChange={handleSearchChange}
+                  value={searchTerm}
+                />
+              </Box>
+              {/* Button */}
+              <Link to="/admins/new">
+                <AddButton title="Add New Admin" />
+              </Link>
+            </ButtonGroup>
 
-          <Typography
-            variant="h6"
-            sx={{
-              backgroundColor: "#FFF4F7;",
-              fontWeight: 600,
-              paddingLeft: "18px",
-              // width: "800px",
-              color: "#641C36",
-              margin: "20px",
-              marginTop: "55px",
-            }}
-          >
-            Published Admins
-          </Typography>
-          {/* table */}
-
-          {filteredTableContent.length === 0 ? (
-            <Typography variant="body1" sx={{ textAlign: "center" }}>
-              No records are found!
+            <Typography
+              variant="h6"
+              sx={{
+                backgroundColor: "#FFF4F7;",
+                fontWeight: 600,
+                paddingLeft: "18px",
+                // width: "800px",
+                color: "#641C36",
+                margin: "20px",
+                marginTop: "55px",
+                textAlign: "left",
+              }}
+            >
+              Published Admins
             </Typography>
-          ) : (
-            <CommonTable
-              path="/admins"
-              tableContent={filteredTableContent}
-              tableHeadingData={adminHeadingData}
-            />
-          )}
-        </Container>
-      </Box>
-    </section>
+            {/* table */}
+
+            {filteredTableContent.length === 0 ? (
+              <Typography variant="body1" sx={{ textAlign: "center" }}>
+                No records are found!
+              </Typography>
+            ) : (
+              <CommonTable
+                path="/admins"
+                tableContent={filteredTableContent}
+                tableHeadingData={adminHeadingData}
+              />
+            )}
+          </Container>
+        </Box>
+      </center>
+    </Box>
   );
 };
 

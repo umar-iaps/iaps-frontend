@@ -86,7 +86,7 @@ export default makeStyles((theme) => ({
     padding: "44px",
     borderRadius: "14px",
     border: "1px solid #E8E8E8",
-    margin: "auto",
+    margin: "39px 40px 0px 177px",
     boxShadow: "0px 4px 12px 0px rgba(129, 129, 129, 0.25)",
   },
   title: {

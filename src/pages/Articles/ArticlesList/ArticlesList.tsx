@@ -57,6 +57,10 @@ const ArticlesList = () => {
     const delObj = { id };
     deleteArticle(delObj).then((response) => {
       console.log("response from delete is ", response);
+      let newData = filteredTableContent.filter((item) => {
+        return item.id !== id;
+      });
+      setFilteredTableContent(newData);
     });
   };
 
@@ -70,73 +74,76 @@ const ArticlesList = () => {
   };
 
   return (
-    <section>
+    <Box sx={{ mb: 5 }}>
       {/* header */}
       <Header title="Articles" />
-      <Box
-        sx={{
-          padding: "8px",
-          bgcolor: "#FFFFFF",
-          borderRadius: "30px",
-          margin: "34px auto",
-          maxWidth: "890px",
-          pb: 5,
-        }}
-      >
-        <CssBaseline />
-        <Container>
-          <ButtonGroup
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              margin: "2px",
-            }}
-          >
-            <Box sx={{ mt: 2 }}>
-              <StyledSearch
-                placeholder="Search"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                InputProps={{ endAdornment: <StyledIcon /> }}
-              />
-            </Box>
-            {/* Button */}
-            <Link to="/articles/new">
-              <AddButton title="Add New Article" />
-            </Link>
-          </ButtonGroup>
+      <center>
+        <Box
+          sx={{
+            padding: "8px",
+            bgcolor: "#FFFFFF",
+            borderRadius: "30px",
+            maxWidth: "95%",
+            margin: "39px 40px 0px 155px",
+            pb: 5,
+          }}
+        >
+          <CssBaseline />
+          <Container>
+            <ButtonGroup
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                margin: "2px",
+              }}
+            >
+              <Box sx={{ mt: 2 }}>
+                <StyledSearch
+                  placeholder="Search"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  InputProps={{ endAdornment: <StyledIcon /> }}
+                />
+              </Box>
+              {/* Button */}
+              <Link to="/articles/new">
+                <AddButton title="Add New Article" />
+              </Link>
+            </ButtonGroup>
 
-          <Typography
-            variant="h6"
-            sx={{
-              backgroundColor: "#FFF4F7;",
-              fontWeight: 600,
-              paddingLeft: "18px",
-              // width: "800px",
-              color: "#641C36",
-              margin: "20px",
-              marginTop: "55px",
-            }}
-          >
-            Published Articles
-          </Typography>
-          {/* table */}
-          {filteredTableContent.length === 0 ? (
-            <Typography variant="body1" sx={{ textAlign: "center" }}>
-              No records are found!
+            <Typography
+              variant="h6"
+              sx={{
+                backgroundColor: "#FFF4F7;",
+                fontWeight: 600,
+                paddingLeft: "18px",
+                // width: "800px",
+                color: "#641C36",
+                margin: "20px",
+                marginTop: "55px",
+                textAlign: "left",
+              }}
+            >
+              Published Articles
             </Typography>
-          ) : (
-            <CommonTable
-              path="/articles"
-              tableContent={filteredTableContent}
-              tableHeadingData={articleHeadingData}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          )}
-        </Container>
-      </Box>
-    </section>
+            {/* table */}
+            {filteredTableContent.length === 0 ? (
+              <Typography variant="body1" sx={{ textAlign: "center" }}>
+                No records are found!
+              </Typography>
+            ) : (
+              <CommonTable
+                path="/articles"
+                tableContent={filteredTableContent}
+                tableHeadingData={articleHeadingData}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            )}
+          </Container>
+        </Box>
+      </center>
+    </Box>
   );
 };
 

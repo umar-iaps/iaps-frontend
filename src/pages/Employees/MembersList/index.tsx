@@ -54,6 +54,11 @@ const MembersList = () => {
     const delObj = { id };
     deleteMember(delObj).then((response) => {
       console.log("response from delete is ", response);
+
+      let newData = filteredTableContent.filter((item) => {
+        return item.id !== id;
+      });
+      setFilteredTableContent(newData);
     });
   };
 
@@ -67,70 +72,73 @@ const MembersList = () => {
   };
 
   return (
-    <section>
+    <Box sx={{ mb: 5 }}>
       <Header title="Members" />
-      <Box
-        sx={{
-          padding: "8px",
-          bgcolor: "#FFFFFF",
-          borderRadius: "30px",
-          margin: "34px auto",
-          maxWidth: "890px",
-          pb: 5,
-        }}
-      >
-        <CssBaseline />
-        <Container>
-          <ButtonGroup
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              margin: "2px",
-            }}
-          >
-            <Box sx={{ mt: 2 }}>
-              <StyledSearch
-                placeholder="Search"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                InputProps={{ endAdornment: <StyledIcon /> }}
-              />
-            </Box>
-            <Link to="/employees/new">
-              <AddButton title="Add New Member" />
-            </Link>
-          </ButtonGroup>
+      <center>
+        <Box
+          sx={{
+            padding: "8px",
+            bgcolor: "#FFFFFF",
+            borderRadius: "30px",
+            maxWidth: "95%",
+            margin: "39px 40px 0px 155px",
+            pb: 5,
+          }}
+        >
+          <CssBaseline />
+          <Container>
+            <ButtonGroup
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                margin: "2px",
+              }}
+            >
+              <Box sx={{ mt: 2 }}>
+                <StyledSearch
+                  placeholder="Search"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  InputProps={{ endAdornment: <StyledIcon /> }}
+                />
+              </Box>
+              <Link to="/employees/new">
+                <AddButton title="Add New Member" />
+              </Link>
+            </ButtonGroup>
 
-          <Typography
-            variant="h6"
-            sx={{
-              backgroundColor: "#FFF4F7;",
-              fontWeight: 600,
-              paddingLeft: "18px",
-              // width: "800px",
-              color: "#641C36",
-              margin: "20px",
-              marginTop: "55px",
-            }}
-          >
-            Members
-          </Typography>
-          {filteredTableContent.length === 0 ? (
-            <Typography variant="body1" sx={{ textAlign: "center" }}>
-              No records are found!
+            <Typography
+              variant="h6"
+              sx={{
+                backgroundColor: "#FFF4F7;",
+                fontWeight: 600,
+                paddingLeft: "18px",
+                // width: "800px",
+                color: "#641C36",
+                margin: "20px",
+                marginTop: "55px",
+                textAlign: "left",
+              }}
+            >
+              Members
             </Typography>
-          ) : (
-            <CommonTable
-              path="/employees"
-              tableContent={filteredTableContent}
-              tableHeadingData={memberHeadingData}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          )}
-        </Container>
-      </Box>
-    </section>
+            {filteredTableContent.length === 0 ? (
+              <Typography variant="body1" sx={{ textAlign: "center" }}>
+                No records are found!
+              </Typography>
+            ) : (
+              <CommonTable
+                path="/employees"
+                tableContent={filteredTableContent}
+                tableHeadingData={memberHeadingData}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            )}
+          </Container>
+        </Box>
+      </center>
+    </Box>
   );
 };
 
