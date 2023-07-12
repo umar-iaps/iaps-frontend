@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -9,47 +11,112 @@ import {
   Select,
   Stack,
   Typography,
+  Snackbar,
+  CircularProgress,
 } from "@mui/material";
+import MuiAlert from "@mui/material/Alert";
 import useStyles from "./style.ts";
-import avator from "@assets/Avatar.svg";
-import upload from "@assets/Group 15.png";
-import publish from "@assets/publish.svg";
-import view from "@assets/view.svg";
+import avator from "@assets/icons/Avatar.svg";
+import upload from "@assets/images/Group 15.png";
+import publish from "@assets/icons/publish.svg";
+import view from "@assets/icons/view.svg";
 import Header from "@components/Topbar/Header.tsx";
-import { Link, useParams } from "react-router-dom";
+import { getAllCountries } from "@services/Countries/api.ts";
+import {
+  addArticle,
+  getArticleById,
+  updateArticle,
+} from "@services/Articles/api.ts";
 import {
   StyledButton,
   StyledInputField,
   StyledTextField,
   StyledTextarea,
 } from "./style.ts";
-import { useState, useEffect } from "react";
-
-import { getAllCountries } from "../../../services/Countries/api.ts";
-import { getArticleById } from "../../../services/Articles/api.ts";
-
-const domainData = [
-  { value: "", label: "None" },
-  { value: 10, label: "Domain" },
-  { value: 20, label: "Domain1" },
-  { value: 30, label: "Domain2" },
-];
 
 const AddArticle = () => {
   const classes = useStyles();
   const params = useParams();
+  const navigate = useNavigate();
   const [countries, setCountries] = useState([]);
   const [data, setData] = useState({});
+  const [files, setFiles] = useState({});
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getAllCountries().then((response) => {
-      console.log("response is ", response);
-      setCountries(response.data);
-    });
-    getArticleById(params?.id).then((response) => {
-      setData(response.data.dataResult);
-    });
-  });
+    getAllCountries()
+      .then((response) => {
+        setCountries(response.data);
+        return getArticleById(params?.id);
+      })
+      .then((response) => {
+        setData(response.data.dataResult);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "countries") {
+      return;
+    }
+    if (name === "image") {
+      setFiles(files[0]);
+    } else {
+      setData((prevData) => ({ ...prevData, [name]: value }));
+    }
+  };
+
+  const handleSubmit = () => {
+    if (params.id) {
+      let formData = new FormData();
+      formData.append("id", data?.id);
+      formData.append("Title", data?.title);
+      formData.append("Body", data?.body);
+      formData.append("ExistingImageIds", data?.images[0].id);
+      formData.append("imageFiles", data?.images[0].url);
+      formData.append("Domains", data?.domains[0].id);
+      updateArticle(formData).then((response) => {
+        setIsSnackbarOpen(true);
+        // navigate("/articles");
+      });
+    } else {
+      let formData = new FormData();
+      formData.append("Title", data.title);
+      formData.append("Body", data?.body);
+      formData.append("ImageFiles", files);
+      formData.append("Domains", "d598e974-d7ed-4994-a2dd-2e3fdf410c2e");
+      addArticle(formData).then((response) => {
+        setIsSnackbarOpen(true);
+        // navigate("/articles");
+      });
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
+  };
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -73,6 +140,27 @@ const AddArticle = () => {
                     </Link>
                   </Box>
 
+                  <Snackbar
+                    open={isSnackbarOpen}
+                    autoHideDuration={3000}
+                    onClose={handleSnackbarClose}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                  >
+                    <MuiAlert
+                      elevation={6}
+                      variant="filled"
+                      onClose={handleSnackbarClose}
+                      severity="success"
+                    >
+                      {params.id
+                        ? "Article updated successfully!"
+                        : "Article added successfully!"}
+                    </MuiAlert>
+                  </Snackbar>
+
                   <StyledInputField>
                     <br />
                     <Typography
@@ -89,6 +177,8 @@ const AddArticle = () => {
                     <StyledTextField
                       type="text"
                       value={data?.title}
+                      name="title"
+                      onChange={handleChange}
                       fullWidth
                       placeholder=" Enter a title"
                       id="fullWidth"
@@ -116,6 +206,8 @@ const AddArticle = () => {
                     <StyledTextarea
                       minRows={8}
                       placeholder="Enter article body..."
+                      name="body"
+                      onChange={handleChange}
                       value={data?.body}
                       sx={{
                         width: "100%",
@@ -154,8 +246,10 @@ const AddArticle = () => {
                       <Select
                         labelId="demo-select-small-label"
                         id="demo-select-small"
+                        name="countries"
+                        onChange={handleChange}
                         label="Age"
-                        sx={{ borderRadius: "35px" }}
+                        sx={{ borderRadius: "35px", textAlign: "left" }}
                       >
                         {countries.map((option) => (
                           <MenuItem key={option.id} value={option.name}>
@@ -213,7 +307,14 @@ const AddArticle = () => {
                         >
                           Upload your images here
                         </Typography>
-                        <input hidden accept="image/*" multiple type="file" />
+                        <input
+                          name="image"
+                          onChange={handleChange}
+                          hidden
+                          accept="image/*"
+                          multiple
+                          type="file"
+                        />
                       </Button>
                     </Stack>{" "}
                     <br />
@@ -240,6 +341,7 @@ const AddArticle = () => {
                       </StyledButton>
                       <StyledButton
                         variant="contained"
+                        onClick={handleSubmit}
                         sx={{ textTransform: "none" }}
                       >
                         <img

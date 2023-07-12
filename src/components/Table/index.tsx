@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import {
   Table,
   TableBody,
@@ -10,31 +9,22 @@ import {
   Box,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import edit from "../../assets/edit.svg";
-import deletes from "../../assets/delete.svg";
+import edit from "@assets/icons/edit.svg";
+import deletes from "@assets/icons/delete.svg";
 import Stack from "@mui/material/Stack";
 import Pagination from "@mui/material/Pagination";
+import { ICommonTableProps } from "@interfaces/ICommonTableProps";
 
-const CommonTable = (props: any) => {
+const CommonTable = (props: ICommonTableProps): JSX.Element => {
   const { tableContent, tableHeadingData, path, onEdit, onDelete } = props;
   const navigate = useNavigate();
-  const [page, setPage] = useState(0);
-  const rowsPerPage = 5;
+  const [page, setPage] = useState<number>(0);
+  const rowsPerPage: number = 5;
 
-  const pageCount = Math.ceil(tableContent.length / rowsPerPage);
+  const pageCount: number = Math.ceil(tableContent.length / rowsPerPage);
 
-  const handlePageChange = (newPage: any) => {
+  const handlePageChange = (newPage: number) => {
     setPage(newPage);
-  };
-  // edit case
-  // const handleEdit = (id: any) => {
-  //   console.log(id, path);
-  //   navigate(`${path}/${id}`);
-  // };
-
-  // delete case
-  const handleDelete = (id: any) => {
-    console.log("id", id);
   };
 
   return (
@@ -45,7 +35,7 @@ const CommonTable = (props: any) => {
           <TableHead>
             <TableRow>
               {Object.values(tableHeadingData).map(
-                (heading: any, index: any) => (
+                (heading: string, index: number) => (
                   <TableCell key={index} sx={{ fontWeight: 600 }}>
                     {heading}
                   </TableCell>
@@ -63,7 +53,7 @@ const CommonTable = (props: any) => {
           <TableBody>
             {tableContent
               ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((content: any, index: any) => (
+              .map((content: any, index: number) => (
                 <TableRow
                   key={index}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -72,7 +62,7 @@ const CommonTable = (props: any) => {
                     if (key !== "id") {
                       return (
                         <TableCell key={index} component="td" scope="row">
-                          {value}
+                          {value as React.ReactNode}
                         </TableCell>
                       );
                     }
@@ -88,8 +78,7 @@ const CommonTable = (props: any) => {
                     <img
                       src={deletes}
                       alt=""
-                      // onClick={() => handleDelete(content.id)}
-                      style={{ marginLeft: "12px", cursor: "pointer" }}
+                      style={{ marginLeft: "10px", cursor: "pointer" }}
                       onClick={() => onDelete(content.id)}
                     />
                   </TableCell>

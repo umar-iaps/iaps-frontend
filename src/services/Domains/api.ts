@@ -1,9 +1,11 @@
 import { get } from "@utils/apiUtils";
-const baseURL = `Domains`;
-export const getAllDomains = async () => {
+import { ApiResponse } from "src/types/ApiResponse";
+import { IDomain } from "@interfaces/IDomain";
+const baseURL: string = "Domains";
+export const getAllDomains = async (): Promise<ApiResponse<IDomain[]>> => {
   try {
     const response = await get(`${baseURL}/getAll`);
-    return { type: "success", data: response.data.dataResult };
+    return { type: "success", data: response.data.dataResult as IDomain[] };
   } catch (error: any) {
     return { type: "error", data: error };
   }

@@ -1,6 +1,6 @@
-import { LayoutProps } from "@interfaces/LayoutProps";
+import { ILayoutProps } from "@interfaces/ILayoutProps";
 
-const Topbar = ({ children }: LayoutProps) => {
+const Topbar: React.FC<ILayoutProps> = ({ children }) => {
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
       {children}

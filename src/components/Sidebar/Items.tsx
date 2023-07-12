@@ -9,16 +9,18 @@ import {
 import { useState } from "react";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import sidebarData from "./SideBarData";
+import { ISideBarDataItem } from "@interfaces/ISidebarItem";
 import useStyles from "./style";
 
-const SidebarItems = () => {
+const SidebarItems = (): JSX.Element => {
   const classes = useStyles();
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isSidebar, setIsSidebar] = useState(true);
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [isSidebar, setIsSidebar] = useState<boolean>(true);
 
-  function handleListItemClick(index) {
+  function handleListItemClick(index: number) {
     setSelectedIndex(index);
   }
+
   const hideSidebar = () => {
     setIsSidebar(false);
   };
@@ -26,8 +28,8 @@ const SidebarItems = () => {
   return (
     <List sx={{ marginTop: "22px" }}>
       {sidebarData
-        ?.filter((item) => item.type === "mainPath")
-        .map((item, index) => (
+        ?.filter((item: I) => item.type === "mainPath")
+        .map((item: ISideBarDataItem, index: number) => (
           <Link
             to={item.path}
             key={index}
@@ -72,8 +74,8 @@ const SidebarItems = () => {
       <br />
       {/* setting & logout */}
       {sidebarData
-        ?.filter((item) => item.type === "setting")
-        .map((item, index) => (
+        ?.filter((item: ISideBarDataItem) => item.type === "setting")
+        .map((item: ISideBarDataItem, index: number) => (
           <Link
             to={item.path}
             key={index}

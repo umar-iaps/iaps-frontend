@@ -1,5 +1,5 @@
 import Items from "./Items";
-import LogoImage from "@assets/iaps-logo.png";
+import LogoImage from "@assets/images/iaps-logo.png";
 import { Box } from "@mui/material";
 
 const Sidebar = () => {

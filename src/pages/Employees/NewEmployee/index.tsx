@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -9,6 +10,8 @@ import {
   Stack,
   Typography,
   InputLabel,
+  CircularProgress,
+  Snackbar,
 } from "@mui/material";
 import {
   StyledButton,
@@ -17,69 +20,85 @@ import {
   StyledTextarea,
 } from "./style.ts";
 import useStyles from "./style.ts";
-import avator from "@assets/Avatar.svg";
-import upload from "@assets/Group 15.png";
-import publish from "@assets/publish.svg";
-import view from "@assets/view.svg";
+import avator from "@assets/icons/Avatar.svg";
+import upload from "@assets/images/Group 15.png";
+import publish from "@assets/icons/publish.svg";
+import view from "@assets/icons/view.svg";
 import Header from "@components/Topbar/Header.tsx";
-import { Link, useParams } from "react-router-dom";
-import { addMember, getMemberById } from "../../../services/Members/api.ts";
-import { useState, useEffect } from "react";
-import { getAllDomains } from "../../../services/Domains/api.ts";
-
-const domainData = [
-  { value: "", label: "None" },
-  { value: 10, label: "Domain" },
-  { value: 20, label: "Domain1" },
-  { value: 30, label: "Domain2" },
-];
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { addMember, getMemberById } from "@services/Members/api.ts";
+import { getAllDomains } from "@services/Domains/api.ts";
+import MuiAlert from "@mui/material/Alert";
 
 const AddEmployees = () => {
   const classes = useStyles();
   const params = useParams();
+  const navigate = useNavigate();
   const [domains, setDomains] = useState([]);
   const [data, setData] = useState({});
-  const [newData, setNewData] = useState([]);
+  const [newData, setNewData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
 
   useEffect(() => {
-    getAllDomains().then((response) => {
-      setDomains(response.data);
-    });
-    getMemberById(params?.id).then((response) => {
-      console.log("response in member id is ", response);
-      setData(response.data.dataResult);
-    });
-  }, []);
+    Promise.all([getAllDomains(), getMemberById(params?.id)])
+      .then(([domainsResponse, memberResponse]) => {
+        setDomains(domainsResponse.data);
+        setData(memberResponse.data.dataResult);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [params?.id]);
 
   const handleChange = (e) => {
+    if (params?.id) {
+      let newData = { ...data };
+    }
     const name = e.target.name;
     let value = e.target.value;
-    if (name == "ImageFile") {
+    if (name === "image") {
       value = e.target.files[0];
     }
-    let newArr = [];
-    if (name == "Domains") {
-      let value1 = domains.filter((item) => {
-        return item?.name == value;
-      });
-      value = [...newArr, value1[0].id];
+    if (name === "Domains") {
+      // const selectedItem = domains.filter((item) => item.name === value);
     }
-    setNewData((set) => {
-      return { ...set, [name]: value };
+    setNewData((prevData) => {
+      return { ...prevData, [name]: value };
     });
   };
+
   const publishMember = () => {
-    console.log("newData is ", newData);
     let formData = new FormData();
-    formData.append("FullName", newData.FullName);
-    formData.append("Position", newData.Position);
-    formData.append("Bio", newData.Bio);
-    formData.append("ImageFile", newData.ImageFile);
-    formData.append("Domains", newData.Domains);
+    formData.append("FullName", newData.fullName);
+    formData.append("Position", newData.position);
+    formData.append("Bio", newData.bio);
+    formData.append("ImageFile", newData.image);
+    formData.append("Domains", newData.domains);
     addMember(formData).then((response) => {
-      console.log("response is ", response);
+      setIsSnackbarOpen(true);
+      // navigate("/employees");
     });
   };
+
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
+  };
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -121,7 +140,7 @@ const AddEmployees = () => {
                       fullWidth
                       value={data?.fullName}
                       onChange={handleChange}
-                      name="FullName"
+                      name="fullName"
                       placeholder=" Enter a title"
                       id="fullWidth"
                       sx={{ height: "45px" }}
@@ -147,7 +166,7 @@ const AddEmployees = () => {
                       type="text"
                       value={data?.position}
                       onChange={handleChange}
-                      name="Position"
+                      name="position"
                       fullWidth
                       placeholder=" Enter a position"
                       id="fullWidth"
@@ -177,7 +196,7 @@ const AddEmployees = () => {
                       placeholder="Enter bio..."
                       value={data?.bio}
                       onChange={handleChange}
-                      name="Bio"
+                      name="bio"
                       sx={{
                         width: "100%",
                         padding: "13.5px 14px",
@@ -200,9 +219,7 @@ const AddEmployees = () => {
                         marginTop: "16px",
                       }}
                     >
-                      <span className={classes.title2}>
-                        &nbsp;&nbsp; Domain
-                      </span>
+                      <span className={classes.title2}>Domain</span>
                     </Typography>
 
                     <FormControl sx={{ m: 1, minWidth: 455 }} size="small">
@@ -216,12 +233,12 @@ const AddEmployees = () => {
                         labelId="demo-select-small-label"
                         id="demo-select-small"
                         onChange={handleChange}
-                        name="Domains"
+                        name="domains"
                         label="Age"
-                        sx={{ borderRadius: "35px" }}
+                        sx={{ borderRadius: "35px", textAlign: "left" }}
                       >
-                        {domains.map((option) => (
-                          <MenuItem key={option.id} value={option.name}>
+                        {domains?.map((option) => (
+                          <MenuItem key={option.id} value={option.id}>
                             {option.name}
                           </MenuItem>
                         ))}
@@ -240,7 +257,7 @@ const AddEmployees = () => {
                         marginTop: "10px",
                       }}
                     >
-                      <span className={classes.title2}> Picture</span>
+                      <span className={classes.title2}>Picture</span>
                     </Typography>
                     <Stack
                       direction="row"
@@ -279,9 +296,8 @@ const AddEmployees = () => {
                         <input
                           hidden
                           onChange={handleChange}
-                          name="ImageFile"
+                          name="image"
                           accept="image/*"
-                          multiple
                           type="file"
                         />
                       </Button>
@@ -322,11 +338,7 @@ const AddEmployees = () => {
                           alt="preview"
                         />{" "}
                         &nbsp;{" "}
-                        {params.id ? (
-                          <> Update Member </>
-                        ) : (
-                          <> Publish Member </>
-                        )}
+                        {params.id ? <>Update Member</> : <>Publish Member</>}
                       </StyledButton>
                     </Box>
                   </StyledInputField>
@@ -336,6 +348,27 @@ const AddEmployees = () => {
           </Container>
         </Box>
       </center>
+
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleSnackbarClose}
+          severity="success"
+        >
+          {params.id
+            ? "Member updated successfully!"
+            : "Member added successfully!"}
+        </MuiAlert>
+      </Snackbar>
     </>
   );
 };

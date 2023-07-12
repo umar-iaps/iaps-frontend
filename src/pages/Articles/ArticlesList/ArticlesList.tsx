@@ -1,70 +1,99 @@
-import { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Typography, Snackbar } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
-import { ButtonGroup, Typography } from "@mui/material";
+import { ButtonGroup } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import CommonTable from "@components/Table";
 import AddButton from "@components/AddButton";
 import Header from "@components/Topbar/Header";
 import { StyledIcon, StyledSearch } from "./style";
-import { getAllArticles } from "@services/Articles/api";
+import { getAllArticles, deleteArticle } from "@services/Articles/api";
 import { articleHeadingData } from "@utils/tableHeadings";
-import { deleteArticle } from "../../../services/Articles/api";
+import CircularProgress from "@mui/material/CircularProgress";
+import MuiAlert from "@mui/material/Alert";
+import { ApiResponse } from "src/types/ApiResponse";
+import { IArticle } from "@interfaces/IArticle";
+
+interface ArticleData {
+  id: string;
+  title: string;
+  countries: string | "N/A";
+  createdBy: string;
+  createdDate: string;
+}
 
 const ArticlesList = () => {
-  const [tableData, setTableData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTableContent, setFilteredTableContent] = useState([]);
+  const [tableData, setTableData] = useState<ArticleData[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [filteredTableContent, setFilteredTableContent] = useState<
+    ArticleData[]
+  >([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
+  const [error, setError] = useState<Error | null>(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (searchTerm == "") {
+    if (searchTerm === "") {
       setFilteredTableContent(tableData);
     }
-  }, [searchTerm]);
+  }, [searchTerm, tableData]);
 
   useEffect(() => {
-    getAllArticles().then((response) => {
-      console.log("All Articles", response.data);
-      const articleData = response.data;
-      const newData = articleData.map((item) => {
-        return {
+    setLoading(true);
+    getAllArticles()
+      .then((response: ApiResponse<IArticle[]>) => {
+        const articleData: IArticle[] = response.data;
+        const newData: ArticleData[] = articleData.map((item) => ({
           id: item.id,
           title: item.title,
           countries: item.countries[0] || "N/A",
           createdBy: item.createdBy,
           createdDate: new Date(item.createdDate).toLocaleDateString(),
-        };
+        }));
+        setTableData(newData);
+        setFilteredTableContent(newData);
+      })
+      .catch((error) => {
+        setError(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-      setTableData(newData);
-      setFilteredTableContent(newData);
-    });
   }, []);
 
-  const handleSearchChange = (event) => {
-    const term = event.target.value;
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const term: string = event.target.value;
     setSearchTerm(term);
     filterTableContent(term);
   };
-  const handleEdit = (id: any) => {
+
+  const handleEdit = (id: string) => {
     navigate(`/articles/${id}`);
   };
 
-  const handleDelete = (id: any) => {
-    console.log("Delete the entry", id);
+  const handleDelete = (id: string) => {
     const delObj = { id };
-    deleteArticle(delObj).then((response) => {
-      console.log("response from delete is ", response);
-      let newData = filteredTableContent.filter((item) => {
-        return item.id !== id;
+    deleteArticle(delObj)
+      .then((response) => {
+        let newData = filteredTableContent.filter((item) => {
+          return item.id !== id;
+        });
+        setFilteredTableContent(newData);
+        setIsSnackbarOpen(true);
+        setSnackbarMessage("Article deleted successfully!");
+      })
+      .catch((error) => {
+        setIsSnackbarOpen(true);
+        setSnackbarMessage("An error occurred. Please try again later.");
+        setError(error);
       });
-      setFilteredTableContent(newData);
-    });
   };
 
-  const filterTableContent = (term) => {
+  const filterTableContent = (term: string) => {
     const filteredData = tableData.filter(
       (item) =>
         item.title.toLowerCase().includes(term.toLowerCase()) ||
@@ -73,9 +102,12 @@ const ArticlesList = () => {
     setFilteredTableContent(filteredData);
   };
 
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
+  };
+
   return (
     <Box sx={{ mb: 5 }}>
-      {/* header */}
       <Header title="Articles" />
       <center>
         <Box
@@ -105,7 +137,6 @@ const ArticlesList = () => {
                   InputProps={{ endAdornment: <StyledIcon /> }}
                 />
               </Box>
-              {/* Button */}
               <Link to="/articles/new">
                 <AddButton title="Add New Article" />
               </Link>
@@ -117,7 +148,6 @@ const ArticlesList = () => {
                 backgroundColor: "#FFF4F7;",
                 fontWeight: 600,
                 paddingLeft: "18px",
-                // width: "800px",
                 color: "#641C36",
                 margin: "20px",
                 marginTop: "55px",
@@ -126,8 +156,19 @@ const ArticlesList = () => {
             >
               Published Articles
             </Typography>
-            {/* table */}
-            {filteredTableContent.length === 0 ? (
+
+            {loading ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "200px",
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            ) : filteredTableContent.length === 0 ? (
               <Typography variant="body1" sx={{ textAlign: "center" }}>
                 No records are found!
               </Typography>
@@ -140,6 +181,25 @@ const ArticlesList = () => {
                 onDelete={handleDelete}
               />
             )}
+
+            <Snackbar
+              open={isSnackbarOpen}
+              autoHideDuration={3000}
+              onClose={handleSnackbarClose}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <MuiAlert
+                elevation={6}
+                variant="filled"
+                onClose={handleSnackbarClose}
+                severity={error ? "error" : "success"}
+              >
+                {snackbarMessage}
+              </MuiAlert>
+            </Snackbar>
           </Container>
         </Box>
       </center>

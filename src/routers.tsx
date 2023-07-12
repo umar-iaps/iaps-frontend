@@ -12,6 +12,8 @@ import AddEmployees from "@pages/Employees/NewEmployee";
 import AddReports from "@pages/Reports/NewReport";
 import Login from "@pages/Login";
 import Layout from "@components/Layout";
+import ListSector from "./pages/Sectors/ListSector";
+import AddSector from "./pages/Sectors/NewSector";
 
 const withLayout = (Component: any) => {
   return (
@@ -24,7 +26,7 @@ const withLayout = (Component: any) => {
 export const routers = [
   {
     path: "/",
-    element: withLayout(() => <div>This is home</div>),
+    element: <Login />,
   },
   {
     path: "/logout",
@@ -40,7 +42,7 @@ export const routers = [
   },
   {
     path: "/dashboard",
-    element: withLayout(() => <div>This is dashboard</div>),
+    element: withLayout(() => <div></div>),
   },
   {
     path: "/projects",
@@ -105,11 +107,19 @@ export const routers = [
   },
   {
     path: "/sectors",
-    element: withLayout(() => <div>This is Sectors</div>),
+    element: withLayout(() => <ListSector />),
+  },
+  {
+    path: "/sectors/new",
+    element: withLayout(() => <AddSector />),
+  },
+  {
+    path: "/sectors/:id",
+    element: withLayout(() => <AddSector />),
   },
   {
     path: "/settings",
-    element: withLayout(() => <div>This is Settings</div>),
+    element: withLayout(() => <div></div>),
   },
   {
     path: "/admins/new",

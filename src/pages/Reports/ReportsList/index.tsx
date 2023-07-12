@@ -1,80 +1,144 @@
-import { useState, useEffect } from "react";
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import React, { useState, useEffect, ChangeEvent } from "react";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+  CircularProgress,
+  Snackbar,
+} from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
-import { ButtonGroup, Typography } from "@mui/material";
+import { ButtonGroup } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import CommonTable from "@components/Table";
 import AddButton from "@components/AddButton";
 import Header from "@components/Topbar/Header";
 import { StyledIcon, StyledSearch } from "./style";
-import { getAllReports } from "@services/Reports/api";
+import { getAllReports, deleteReport } from "@services/Reports/api";
 import { reportHeadingData } from "@utils/tableHeadings";
-import { deleteReport } from "../../../services/Reports/api";
+import { ApiResponse } from "src/types/ApiResponse";
+import { IReport } from "@interfaces/IReport";
+import { getAllSectors } from "@services/Sectors/api";
+import { getAllRegions } from "@services/Regions/api";
+import MuiAlert from "@mui/material/Alert";
 
-const domainData = [
-  { value: "", label: "None" },
-  { value: 10, label: "Domain" },
-  { value: 20, label: "Domain1" },
-  { value: 30, label: "Domain2" },
-];
+interface ReportData {
+  id: string;
+  title: string;
+  expertize: string;
+  sectors: string | "N/A";
+  regions: string | "N/A";
+  year: number;
+}
 
 const ReportsList = () => {
-  const [tableData, setTableData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTableContent, setFilteredTableContent] = useState([]);
+  const [tableData, setTableData] = useState<ReportData[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [sectors, setSectors] = useState([]);
+  const [regions, setRegions] = useState([]);
+
+  const [filteredTableContent, setFilteredTableContent] = useState<
+    ReportData[]
+  >([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const navigate = useNavigate();
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (searchTerm == "") {
+    if (searchTerm === "") {
       setFilteredTableContent(tableData);
     }
-  }, [searchTerm]);
+  }, [searchTerm, tableData]);
 
   useEffect(() => {
-    getAllReports().then((response) => {
-      console.log("response on reports is ", response.data);
-      const reportsData = response.data;
-      const newData = reportsData.map((item: any) => {
-        return {
+    setLoading(true);
+    getAllReports()
+      .then((response: ApiResponse<IReport[]>) => {
+        const reportsData: IReport[] = response.data;
+        const newData: ReportData[] = reportsData.map((item) => ({
           id: item.id,
           title: item.title,
           expertize: item.expertize,
-          sectors: item.sectors[0] || "N/A",
+          sectors: item.sectors[0]?.name || "N/A",
           regions: item.regions[0]?.name ? item.regions[0]?.name : "N/A",
           year: item.year,
-        };
+        }));
+        setTableData(newData);
+        setFilteredTableContent(newData);
+      })
+      .catch((error) => {
+        setError(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-      setTableData(newData);
-      setFilteredTableContent(newData);
+    getAllSectors().then((response) => {
+      setSectors(response.data);
+    });
+    getAllRegions().then((response) => {
+      setRegions(response.data);
     });
   }, []);
 
-  const handleSearchChange = (event) => {
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
     filterTableContent(event.target.value);
   };
 
-  const handleEdit = (id: any) => {
+  const handleEdit = (id: string) => {
     navigate(`/reports/${id}`);
   };
 
-  const handleDelete = (id: any) => {
-    console.log("Delete the entry", id);
-    const delObj = { id };
-    deleteReport(delObj).then((response) => {
-      console.log("response from delete is ", response);
-    });
+  const handleDelete = (id: string) => {
+    deleteReport({ id })
+      .then((response) => {
+        let newData = filteredTableContent.filter((item) => {
+          return item.id !== id;
+        });
+        setFilteredTableContent(newData);
+        setIsSnackbarOpen(true);
+        setSnackbarMessage("Report deleted successfully!");
+      })
+      .catch((error) => {
+        setIsSnackbarOpen(true);
+        setSnackbarMessage("An error occurred. Please try again later.");
+        setError(error);
+      });
   };
 
-  const filterTableContent = (term) => {
+  const filterTableContent = (term: string) => {
     const filteredData = tableData.filter(
       (item) =>
         item.title.toLowerCase().includes(term.toLowerCase()) ||
         item.expertize.toLowerCase().includes(term.toLowerCase())
     );
     setFilteredTableContent(filteredData);
+  };
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    if (name === "sectors") {
+      const filteredData = tableData.filter((item) => {
+        return item.sectors === value;
+      });
+      setFilteredTableContent(filteredData);
+    }
+    if (name === "regions") {
+      const filteredData = tableData.filter((item) => {
+        return item.regions === value;
+      });
+      setFilteredTableContent(filteredData);
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
   };
 
   return (
@@ -106,17 +170,19 @@ const ReportsList = () => {
                     id="demo-select-small-label"
                     sx={{ color: "#999999" }}
                   >
-                    Select a domain
+                    Filter by Sector
                   </InputLabel>
                   <Select
                     labelId="demo-select-small-label"
                     id="demo-select-small"
                     label="Age"
-                    sx={{ borderRadius: "35px" }}
+                    name="sectors"
+                    onChange={handleChange}
+                    sx={{ borderRadius: "35px", textAlign: "left" }}
                   >
-                    {domainData.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
+                    {sectors.map((option) => (
+                      <MenuItem key={option.id} value={option.name}>
+                        {option.name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -133,11 +199,13 @@ const ReportsList = () => {
                     labelId="demo-select-small-label"
                     id="demo-select-small"
                     label="Age"
-                    sx={{ borderRadius: "35px" }}
+                    name="regions"
+                    onChange={handleChange}
+                    sx={{ borderRadius: "35px", textAlign: "left" }}
                   >
-                    {domainData.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
+                    {regions.map((option) => (
+                      <MenuItem key={option.id} value={option.name}>
+                        {option.name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -153,11 +221,11 @@ const ReportsList = () => {
                     labelId="demo-select-small-label"
                     id="demo-select-small"
                     label="Age"
-                    sx={{ borderRadius: "35px" }}
+                    sx={{ borderRadius: "35px", textAlign: "left" }}
                   >
-                    {domainData.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
+                    {sectors.map((option) => (
+                      <MenuItem key={option.id} value={option.name}>
+                        {option.name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -181,15 +249,19 @@ const ReportsList = () => {
                 backgroundColor: "#FFF4F7;",
                 fontWeight: 600,
                 paddingLeft: "18px",
-                // width: "810px",
                 color: "#641C36",
                 margin: "10px",
                 marginTop: "33px",
+                textAlign: "left",
               }}
             >
               Published Reports
             </Typography>
-            {filteredTableContent.length === 0 ? (
+            {loading ? (
+              <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+                <CircularProgress />
+              </Box>
+            ) : filteredTableContent.length === 0 ? (
               <Typography variant="body1" sx={{ textAlign: "center" }}>
                 No records are found!
               </Typography>
@@ -202,6 +274,24 @@ const ReportsList = () => {
                 onDelete={handleDelete}
               />
             )}
+            <Snackbar
+              open={isSnackbarOpen}
+              autoHideDuration={3000}
+              onClose={handleSnackbarClose}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <MuiAlert
+                elevation={6}
+                variant="filled"
+                onClose={handleSnackbarClose}
+                severity={error ? "error" : "success"}
+              >
+                {snackbarMessage}
+              </MuiAlert>
+            </Snackbar>
           </Container>
         </Box>
       </center>

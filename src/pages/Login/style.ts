@@ -1,9 +1,9 @@
 import { styled, Box, Button, Typography, TextField } from "@mui/material";
 export const StyledBox = styled(Box)(() => ({
   backgroundColor: "white",
-  height: "721px",
+  height: "518px",
   borderRadius: "0px 60px 60px 0px",
-  transform: "translate(0px, 3px)",
+  transform: "translate(0px, 0px)",
 }));
 
 export const StyledButton = styled(Button)(() => ({
@@ -51,7 +51,7 @@ export const StyledInputField = styled(Box)(() => ({
 
 export const StyledTypography = styled(Typography)(() => ({
   color: "#641C36",
-  fontSize: "48px",
+  fontSize: "43px",
   fontFamily: "Poppins",
   fontStyle: "normal",
   fontWeight: "600",

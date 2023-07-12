@@ -1,11 +1,13 @@
-export const articleHeadingData = {
+import { IHeadingData } from "@interfaces/IHeadingData";
+
+export const articleHeadingData: IHeadingData = {
   title: "Title",
   country: "Country",
   created: "Created by",
   published: "Date Published",
 };
 
-export const projectHeadingData = {
+export const projectHeadingData: IHeadingData = {
   title: "Title",
   country: "Country",
   body: "Body",
@@ -13,17 +15,17 @@ export const projectHeadingData = {
   published: "Date Published",
 };
 
-export const jobHeadingData = {
+export const jobHeadingData: IHeadingData = {
   title: "Title",
   location: "Location",
 };
 
-export const memberHeadingData = {
+export const memberHeadingData: IHeadingData = {
   fullname: "Full name",
   position: "Position",
 };
 
-export const reportHeadingData = {
+export const reportHeadingData: IHeadingData = {
   title: "Title",
   expertize: "Expertize",
   sectors: "Sectors",
@@ -31,8 +33,15 @@ export const reportHeadingData = {
   year: "Year",
 };
 
-export const adminHeadingData = {
-  name: "Full name",
+export const sectorHeadingData: IHeadingData = {
+  name: "Name",
+  description: "Description",
+  imageUrl: "Image URL",
+  slug: "Slug",
+};
+
+export const adminHeadingData: IHeadingData = {
+  name: "Full Name",
   email: "Email",
   domains: "Domains",
 };

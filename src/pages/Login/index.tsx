@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import LoginImage from "@assets/login-side.png";
-import logo from "@assets/iaps-logo.png";
+import LoginImage from "@assets/images/login-side.png";
+import logo from "@assets/images/iaps-logo.png";
 import { useNavigate } from "react-router-dom";
 import {
   StyledBox,
@@ -14,9 +14,14 @@ import {
   StyledTypography,
 } from "./style";
 import { login } from "@services/Accounts/api";
+import CircularProgress from "@mui/material/CircularProgress";
+import { setUser } from "../../userSlice";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const [loginError, setLoginError] = useState(false);
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const validationSchema = yup.object({
@@ -29,6 +34,8 @@ const Login = () => {
       .then((response) => {
         const result = response.data;
         if (result.success) {
+          const user = result.dataResult;
+          dispatch(setUser(user));
           localStorage.setItem("authToken", result.dataResult.token);
           navigate("/dashboard");
         } else {
@@ -50,7 +57,7 @@ const Login = () => {
   });
 
   return (
-    <section
+    <Box
       style={{
         backgroundColor: "#641C36",
         width: "100%",
@@ -60,14 +67,14 @@ const Login = () => {
     >
       <Box
         sx={{
-          padding: "44px 0px 44px 0px",
+          padding: "15px 0px 0px 0px",
           maxWidth: "100%",
-          margin: "0px 50px",
+          margin: "0px 20px",
         }}
       >
-        <Grid container>
+        <Grid container sx={{ mt: 3 }}>
           <Grid item lg={6} md={6} sm={12} xs={12}>
-            <img src={LoginImage} width="100%" height={750} alt="" />
+            <img src={LoginImage} width="100%" height={540} alt="" />
           </Grid>
           <Grid
             item
@@ -84,7 +91,7 @@ const Login = () => {
                   width={100}
                   height={44}
                   alt=""
-                  style={{ marginTop: "100px" }}
+                  style={{ marginTop: "40px" }}
                 />
                 <StyledTypography variant="h4">
                   Hello, Welcome back!
@@ -166,8 +173,13 @@ const Login = () => {
                   type="submit"
                   variant="contained"
                   sx={{ textTransform: "none" }}
+                  disabled={loading}
                 >
-                  Login
+                  {loading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    "Login"
+                  )}
                 </StyledButton>
                 {loginError && (
                   <Box
@@ -190,7 +202,7 @@ const Login = () => {
           </Grid>
         </Grid>
       </Box>
-    </section>
+    </Box>
   );
 };
 

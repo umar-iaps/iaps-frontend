@@ -1,6 +1,10 @@
 import { get } from "@utils/apiUtils";
-const baseURL = `Countries`;
-export const getAllCountries = async () => {
+import { ApiResponse } from "src/types/ApiResponse";
+import { ICountry } from "@interfaces/ICountry";
+
+const baseURL = "Countries";
+
+export const getAllCountries = async (): Promise<ApiResponse<ICountry[]>> => {
   try {
     const response = await get(`${baseURL}/getAll`);
     return { type: "success", data: response.data.dataResult };

@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -11,52 +12,45 @@ import {
   Typography,
 } from "@mui/material";
 import useStyles from "./style.ts";
-import avator from "@assets/Avatar.svg";
-import upload from "@assets/Group 15.png";
-import publish from "@assets/publish.svg";
-import view from "@assets/view.svg";
+import avator from "@assets/icons/Avatar.svg";
+import upload from "@assets/images/Group 15.png";
+import publish from "@assets/icons/publish.svg";
+import view from "@assets/icons/view.svg";
 import Header from "@components/Topbar/Header.tsx";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   StyledButton,
   StyledInputField,
   StyledTextField,
   StyledTextarea,
 } from "./style.ts";
-import { useEffect, useState } from "react";
+import { getAllCountries } from "@services/Countries/api.ts";
+import { getAllSectors } from "@services/Sectors/api.ts";
+import { getAllDomains } from "@services/Domains/api.ts";
 import {
-  addProject,
   getProjectById,
+  addProject,
   updateProject,
-} from "../../../services/Projects/api.ts";
-import { getAllCountries } from "../../../services/Countries/api.ts";
-import { getAllSectors } from "../../../services/Sectors/api.ts";
-import { getAllDomains } from "../../../services/Domains/api.ts";
+} from "@services/Projects/api.ts";
 
 const AddProject = () => {
   const classes = useStyles();
   const params = useParams();
-  // const [domainData, setDomainData] = useState([]);
+  const navigate = useNavigate();
   const [countries, setCountries] = useState([]);
   const [sectors, setSectors] = useState([]);
   const [data, setData] = useState({});
   const [files, setFiles] = useState([]);
   const [domains, setDomains] = useState([]);
 
-  console.log(data);
-
   useEffect(() => {
     getAllCountries().then((response) => {
-      console.log("response is ", response);
       setCountries(response.data);
     });
-
     getAllSectors().then((response) => {
-      console.log("Sectors is ", response.data);
       setSectors(response.data);
     });
     getProjectById(params?.id).then((response) => {
-      console.log("project data by id is ", response.data);
       setData(response.data);
     });
     getAllDomains().then((response) => {
@@ -64,57 +58,49 @@ const AddProject = () => {
     });
   }, []);
 
-  const handleChange = (e: any) => {
-    const name = e.target.name;
-    let value = e.target.value;
-    let newArr: any = [];
-    if (name == "countries") {
-      let value1 = countries.filter((item) => {
-        return item?.name == value;
-      });
-      console.log(value1[0].id);
-
-      value = [...newArr, value1[0].id];
-    } else if (name == "sectors") {
-      let value1 = sectors.filter((item) => {
-        return item?.name == value;
-      });
-      console.log(value1[0].id);
-
-      value = [...newArr, value1[0].id];
-    } else if (name == "images") {
-      console.log("filw", e.target.files[0]);
-      if (!!files.length) setFiles((prev) => [...prev, e.target.files[0]]);
-      else setFiles(e.target.files[0]);
-      let value1 = e.target.files[0];
-      value = [...newArr, value1];
-      console.log("Image values is ", value);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, files } = e.target;
+    if (name === "countries" || name === "sectors") {
+      const selectedItem =
+        name === "countries"
+          ? countries.filter((item) => item.name == value)
+          : sectors.filter((item) => item.name === value);
+      setData((prevData) => ({ ...prevData, [name]: selectedItem[0].id }));
+    } else if (name === "images") {
+      setFiles(files[0]);
+    } else {
+      setData((prevData) => ({ ...prevData, [name]: value }));
     }
-    setData((set) => {
-      return { ...set, [name]: value };
-    });
   };
-  console.log(data, sectors);
+
   const publishProject = () => {
     if (params.id) {
-      updateProject();
-    } else {
       let formData = new FormData();
+      formData.append("id", data?.id);
       formData.append("Title", data?.title);
       formData.append("Body", data?.body);
+      formData.append("ExistingImageIds", data?.images[0].id);
+      formData.append("imageFiles", data?.images[0].url);
+      formData.append("Domains", data?.domains[0].id);
+      // formData.append("Sectors");
+      updateProject(formData).then((response) => {
+        navigate("/projects");
+      });
+    } else {
+      let formData = new FormData();
+      formData.append("Title", data.title);
+      formData.append("Body", data?.body);
       formData.append("ImageFiles", files);
-      formData.append("Domains", domains);
-      formData.append("Sectors", data?.sectors);
-      console.log(formData, data);
+      formData.append("Domains", "d598e974-d7ed-4994-a2dd-2e3fdf410c2e");
+      formData.append("Sectors", data.sectors);
       addProject(formData).then((response) => {
-        console.log("Adding response is ", response);
+        navigate("/projects");
       });
     }
   };
 
   return (
     <>
-      {/* Header */}
       <Header title="Projects" />
       <center>
         <Box style={{ marginTop: "10px", marginBottom: "66px" }}>
@@ -194,7 +180,6 @@ const AddProject = () => {
                       }}
                     />
                   </StyledInputField>
-                  {/* country */}
                   <StyledInputField>
                     <Typography
                       variant="h6"
@@ -221,11 +206,10 @@ const AddProject = () => {
                       <Select
                         labelId="demo-select-small-label"
                         name="countries"
-                        value={data?.countries}
                         onChange={handleChange}
                         id="demo-select-small"
                         label="Age"
-                        sx={{ borderRadius: "35px" }}
+                        sx={{ borderRadius: "35px", textAlign: "left" }}
                       >
                         {countries.map((option) => (
                           <MenuItem key={option?.id} value={option?.name}>
@@ -266,7 +250,7 @@ const AddProject = () => {
                         value={data?.sectors}
                         onChange={handleChange}
                         // label="Age"
-                        sx={{ borderRadius: "35px" }}
+                        sx={{ borderRadius: "35px", textAlign: "left" }}
                       >
                         {sectors.map((option) => (
                           <MenuItem key={option?.id} value={option?.name}>

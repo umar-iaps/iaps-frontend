@@ -1,74 +1,99 @@
 import { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography, Snackbar } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
-import { ButtonGroup, Typography } from "@mui/material";
+import { ButtonGroup } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import CommonTable from "@components/Table";
 import AddButton from "@components/AddButton";
 import Header from "@components/Topbar/Header";
 import { StyledIcon, StyledSearch } from "./style";
-import { getAllMembers } from "@services/Members/api";
+import { getAllMembers, deleteMember } from "@services/Members/api";
 import { memberHeadingData } from "@utils/tableHeadings";
-import { deleteMember } from "../../../services/Members/api";
+import CircularProgress from "@mui/material/CircularProgress";
+import MuiAlert from "@mui/material/Alert";
+import { ApiResponse } from "src/types/ApiResponse";
+import { IMember } from "@interfaces/IMember";
+
+interface MemberData {
+  id: string;
+  fullName: string;
+  position: string;
+}
 
 const MembersList = () => {
-  const [tableData, setTableData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTableContent, setFilteredTableContent] = useState([]);
+  const [tableData, setTableData] = useState<MemberData[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [filteredTableContent, setFilteredTableContent] = useState<
+    MemberData[]
+  >([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (searchTerm == "") {
-      setFilteredTableContent(tableData);
-    }
-  }, [searchTerm]);
-
-  useEffect(() => {
-    getAllMembers().then((response) => {
-      console.log("response on members is ", response.data);
-      const membersData = response.data;
-      const newData = membersData.map((item: any) => {
-        return {
+    setLoading(true);
+    getAllMembers()
+      .then((response: ApiResponse<IMember[]>) => {
+        const membersData: IMember[] = response.data;
+        const newData: MemberData[] = membersData.map((item) => ({
           id: item.id,
           fullName: item.fullName,
           position: item.position,
-        };
+        }));
+        setTableData(newData);
+        setFilteredTableContent(newData);
+      })
+      .catch((error) => {
+        setError(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-      setTableData(newData);
-      setFilteredTableContent(newData);
-    });
   }, []);
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-    filterTableContent(event.target.value);
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const term: string = event.target.value;
+    setSearchTerm(term);
+    filterTableContent(term);
   };
-  const handleEdit = (id: any) => {
+
+  const handleEdit = (id: string) => {
     navigate(`/employees/${id}`);
   };
 
-  const handleDelete = (id: any) => {
-    console.log("Delete the entry", id);
+  const handleDelete = (id: string) => {
     const delObj = { id };
-    deleteMember(delObj).then((response) => {
-      console.log("response from delete is ", response);
-
-      let newData = filteredTableContent.filter((item) => {
-        return item.id !== id;
+    deleteMember(delObj)
+      .then((response) => {
+        let newData = filteredTableContent.filter((item) => {
+          return item.id !== id;
+        });
+        setFilteredTableContent(newData);
+        setIsSnackbarOpen(true);
+        setSnackbarMessage("Member deleted successfully!");
+      })
+      .catch((error) => {
+        setIsSnackbarOpen(true);
+        setSnackbarMessage("An error occurred. Please try again later.");
+        setError(error);
       });
-      setFilteredTableContent(newData);
-    });
   };
 
-  const filterTableContent = (term) => {
+  const filterTableContent = (term: string) => {
     const filteredData = tableData.filter(
       (item) =>
         item.fullName.toLowerCase().includes(term.toLowerCase()) ||
         item.position.toLowerCase().includes(term.toLowerCase())
     );
     setFilteredTableContent(filteredData);
+  };
+
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
   };
 
   return (
@@ -113,7 +138,6 @@ const MembersList = () => {
                 backgroundColor: "#FFF4F7;",
                 fontWeight: 600,
                 paddingLeft: "18px",
-                // width: "800px",
                 color: "#641C36",
                 margin: "20px",
                 marginTop: "55px",
@@ -122,7 +146,19 @@ const MembersList = () => {
             >
               Members
             </Typography>
-            {filteredTableContent.length === 0 ? (
+
+            {loading ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "200px",
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            ) : filteredTableContent.length === 0 ? (
               <Typography variant="body1" sx={{ textAlign: "center" }}>
                 No records are found!
               </Typography>
@@ -135,6 +171,25 @@ const MembersList = () => {
                 onDelete={handleDelete}
               />
             )}
+
+            <Snackbar
+              open={isSnackbarOpen}
+              autoHideDuration={3000}
+              onClose={handleSnackbarClose}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <MuiAlert
+                elevation={6}
+                variant="filled"
+                onClose={handleSnackbarClose}
+                severity={error ? "error" : "success"}
+              >
+                {snackbarMessage}
+              </MuiAlert>
+            </Snackbar>
           </Container>
         </Box>
       </center>

@@ -1,8 +1,12 @@
-import { LayoutProps } from "@interfaces/LayoutProps";
+import { ReactNode } from "react";
 import Sidebar from "../Sidebar";
 import Topbar from "../Topbar";
 
-const Layout = ({ children }: LayoutProps) => {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div
       style={{

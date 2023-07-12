@@ -1,10 +1,20 @@
-import {Box} from '@mui/material';
-const BoxComponent = ({width}: any, {height}: any, {children}: any) => {
+import { Box } from "@mui/material";
+import { IBoxComponentProps } from "@interfaces/IBoxComponentProps";
+
+const BoxComponent: React.FC<IBoxComponentProps> = ({
+  width,
+  height,
+  children,
+}) => {
   return (
-    <Box width={width} height={height} sx={{margin: '40px auto',backgroundColor: "#FFF"}}>
-        {children}
+    <Box
+      width={width}
+      height={height}
+      sx={{ margin: "40px auto", backgroundColor: "#FFF" }}
+    >
+      {children}
     </Box>
-  )
-}
+  );
+};
 
 export default BoxComponent;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import {
   Box,
   CssBaseline,
@@ -6,63 +6,52 @@ import {
   ButtonGroup,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CommonTable from "@components/Table";
 import AddButton from "@components/AddButton";
 import Header from "@components/Topbar/Header";
 import { StyledSearch, StyledIcon } from "./style";
-import { getAdmins } from "@services/Admin/api";
-import { adminHeadingData } from "@utils/tableHeadings.ts";
-const tableData = [
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-  },
-  {
-    title: "Article’s Title",
-    country: "Venezuela",
-    body: "sector x",
-  },
-];
+import { adminHeadingData } from "@utils/tableHeadings";
+import { tableData } from "@utils/tableData";
+
+interface TableItem {
+  id: string;
+  title: string;
+  country: string;
+  body: string;
+}
 
 const LastAdmins = () => {
-  const [tableContent, setTableContent] = useState(tableData);
+  const navigate = useNavigate();
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTableContent, setFilteredTableContent] = useState(tableData);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [filteredTableContent, setFilteredTableContent] =
+    useState<TableItem[]>(tableData);
 
   useEffect(() => {
-    getAdmins;
-  });
+    if (searchTerm === "") {
+      setFilteredTableContent(tableData);
+    }
+  }, [searchTerm]);
 
-  const handleSearchChange = (event: any) => {
+  const handleEdit = (id: string) => {
+    navigate(`/admins/${id}`);
+  };
+
+  const handleDelete = (id: string) => {
+    let newData = filteredTableContent.filter((item) => {
+      return item.id !== id;
+    });
+    setFilteredTableContent(newData);
+  };
+
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     const term = event.target.value;
     setSearchTerm(term);
     filterTableContent(term);
   };
 
-  const filterTableContent = (term) => {
+  const filterTableContent = (term: string) => {
     const filteredData = tableData.filter(
       (item) =>
         item.title.toLowerCase().includes(term.toLowerCase()) ||
@@ -103,7 +92,6 @@ const LastAdmins = () => {
                   value={searchTerm}
                 />
               </Box>
-              {/* Button */}
               <Link to="/admins/new">
                 <AddButton title="Add New Admin" />
               </Link>
@@ -115,7 +103,6 @@ const LastAdmins = () => {
                 backgroundColor: "#FFF4F7;",
                 fontWeight: 600,
                 paddingLeft: "18px",
-                // width: "800px",
                 color: "#641C36",
                 margin: "20px",
                 marginTop: "55px",
@@ -124,7 +111,6 @@ const LastAdmins = () => {
             >
               Published Admins
             </Typography>
-            {/* table */}
 
             {filteredTableContent.length === 0 ? (
               <Typography variant="body1" sx={{ textAlign: "center" }}>
@@ -135,6 +121,8 @@ const LastAdmins = () => {
                 path="/admins"
                 tableContent={filteredTableContent}
                 tableHeadingData={adminHeadingData}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
               />
             )}
           </Container>

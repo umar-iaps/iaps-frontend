@@ -1,10 +1,11 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
+import { IApiConfig } from "@interfaces/IApiConfig";
 
-const api = axios.create({
+const api: AxiosInstance = axios.create({
   baseURL: import.meta.env.REACT_APP_API_URL,
 });
 
-api.interceptors.request.use((config) => {
+api.interceptors.request.use((config: IApiConfig) => {
   const token = localStorage.getItem("authToken");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

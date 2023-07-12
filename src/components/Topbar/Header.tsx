@@ -1,7 +1,6 @@
 import Toolbar from "@mui/material/Toolbar";
-import searchIconLight from "@assets/light.svg";
+import searchIconLight from "@assets/icons/light.svg";
 import Box from "@mui/material/Box";
-import { LayoutProps } from "@interfaces/LayoutProps";
 import {
   StyledAppBar,
   StyledAvatar,
@@ -11,8 +10,12 @@ import {
   StyledSearchBox,
   StyledTitle,
 } from "./style.ts";
+import { useSelector } from "react-redux";
+import { IHeaderProps } from "@interfaces/IHeaderProps.ts";
 
-const Header = (props: LayoutProps) => {
+const Header: React.FC<IHeaderProps> = (props) => {
+  const user = useSelector((state) => state.userDetails.user.user);
+  console.log("user data", user);
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
       <StyledAppBar>
@@ -43,9 +46,9 @@ const Header = (props: LayoutProps) => {
             </StyledSearchBox>
             <StyledRightBlock>
               <StyledLedianShera variant="body1">
-                Ledian Shera
+                {user.firstName + " " + user.lastName}
               </StyledLedianShera>
-              <StyledAvatar></StyledAvatar>
+              <StyledAvatar />
             </StyledRightBlock>
           </Box>
         </Toolbar>

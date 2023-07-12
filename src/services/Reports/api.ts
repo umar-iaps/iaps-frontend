@@ -1,6 +1,10 @@
-const baseURL = "Reports";
 import { get, post, put, remove } from "@utils/apiUtils";
-export const getAllReportsByDomainId = async (id: string) => {
+import { ApiResponse } from "src/types/ApiResponse";
+import { IReport } from "@interfaces/IReport";
+const baseURL: string = "Reports";
+export const getAllReportsByDomainId = async (
+  id: string
+): Promise<ApiResponse<IReport[]>> => {
   try {
     const response = await get(`${baseURL}/getAll/${id}`);
     return { type: "success", data: response.data.data };
@@ -9,47 +13,53 @@ export const getAllReportsByDomainId = async (id: string) => {
   }
 };
 
-export const getAllReports = async () => {
+export const getAllReports = async (): Promise<ApiResponse<IReport[]>> => {
   try {
     const response = await get(`${baseURL}/getAllForDashboard`);
     return { type: "success", data: response.data.dataResult };
-  } catch (error) {
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };
 
-export const getReportById = async (id: string) => {
+export const getReportById = async (
+  id: string
+): Promise<ApiResponse<IReport>> => {
   try {
     const response = await get(`${baseURL}/getById/${id}`);
-    return { type: "success", data: response.data };
-  } catch (error) {
+    return { type: "success", data: response.data.dataResult };
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };
 
-export const addReport = async (reportData: any) => {
+export const addReport = async (reportData: any): Promise<ApiResponse<any>> => {
   try {
     const response = await post(`${baseURL}/add`, reportData);
     return { type: "success", data: response.data };
-  } catch (error) {
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };
 
-export const updateReport = async (reportData: any) => {
+export const updateReport = async (
+  reportData: any
+): Promise<ApiResponse<any>> => {
   try {
     const response = await put(`${baseURL}/edit`, reportData);
     return { type: "success", data: response.data };
-  } catch (error) {
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };
 
-export const deleteReport = async (reportData: any) => {
+export const deleteReport = async (
+  reportData: any
+): Promise<ApiResponse<any>> => {
   try {
     const response = await remove(`${baseURL}/delete`, reportData);
     return { type: "success", data: response.data };
-  } catch (error) {
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };

@@ -1,6 +1,10 @@
-const baseURL = `Members`;
 import { get, post, put, remove } from "@utils/apiUtils";
-export const getAllMembers = async () => {
+import { ApiResponse } from "src/types/ApiResponse";
+import { IMember } from "@interfaces/IMember";
+
+const baseURL: string = "Members";
+
+export const getAllMembers = async (): Promise<ApiResponse<IMember[]>> => {
   try {
     const response = await get(`${baseURL}/getAllForDashboard`);
     return { type: "success", data: response.data.dataResult };
@@ -9,47 +13,53 @@ export const getAllMembers = async () => {
   }
 };
 
-export const getMembersByDomainId = async (id: string) => {
+export const getMembersByDomainId = async (
+  id: string
+): Promise<ApiResponse<any>> => {
   try {
     const response = await get(`${baseURL}/getAll/${id}`);
     return { type: "success", data: response.data };
-  } catch (error) {
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };
 
-export const getMemberById = async (id: string) => {
+export const getMemberById = async (id: string): Promise<ApiResponse<any>> => {
   try {
     const response = await get(`${baseURL}/getById/${id}`);
     return { type: "success", data: response.data };
-  } catch (error) {
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };
 
-export const addMember = async (memberData: any) => {
+export const addMember = async (memberData: any): Promise<ApiResponse<any>> => {
   try {
     const response = await post(`${baseURL}/add`, memberData);
     return { type: "success", data: response.data };
-  } catch (error) {
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };
 
-export const updateMember = async (memberData: any) => {
+export const updateMember = async (
+  memberData: any
+): Promise<ApiResponse<any>> => {
   try {
     const response = await put(`${baseURL}/edit`, memberData);
     return { type: "success", data: response.data };
-  } catch (error) {
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };
 
-export const deleteMember = async (memberData: any) => {
+export const deleteMember = async (
+  memberData: any
+): Promise<ApiResponse<any>> => {
   try {
     const response = await remove(`${baseURL}/delete`, memberData);
     return { type: "success", data: response.data };
-  } catch (error) {
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };

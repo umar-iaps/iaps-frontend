@@ -1,20 +1,17 @@
 import {
   Box,
-  Button,
   Container,
   FormControl,
   Grid,
   InputLabel,
   MenuItem,
   Select,
-  Stack,
   Typography,
 } from "@mui/material";
 import useStyles from "./style.ts";
-import avator from "@assets/Avatar.svg";
-import upload from "@assets/Group 15.png";
-import publish from "@assets/publish.svg";
-import view from "@assets/view.svg";
+import avator from "@assets/icons/Avatar.svg";
+import publish from "@assets/icons/publish.svg";
+import view from "@assets/icons/view.svg";
 import Header from "@components/Topbar/Header.tsx";
 import { Link, useParams } from "react-router-dom";
 import {
@@ -23,34 +20,94 @@ import {
   StyledTextField,
   StyledTextarea,
 } from "./style.ts";
-
-const domainData = [
-  { value: "", label: "None" },
-  { value: 10, label: "Domain" },
-  { value: 20, label: "Domain1" },
-  { value: 30, label: "Domain2" },
-];
+import { useEffect, useState } from "react";
+import { addJob, updateJob } from "../../../services/Jobs/api.ts";
+import { Snackbar } from "@mui/material";
+import MuiAlert from "@mui/material/Alert";
+import { getAllDomains } from "../../../services/Domains/api.ts";
 
 const AddJobs = () => {
   const classes = useStyles();
   const params = useParams();
-  console.log("id", params.id);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [domainData, setDomainData] = useState([]);
+  const [formData, setFormData] = useState({
+    title: "",
+    location: "",
+    workingHours: "",
+    description: "",
+    responsibilities: [{ title: "" }],
+    qualifications: [{ title: "" }],
+    howToApply: "",
+    domainId: "",
+  });
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevValue) => ({
+      ...prevValue,
+      [name]: value,
+    }));
+  };
+
+  const handleResponsibilityChange = (index, event) => {
+    const { name, value } = event.target;
+    setFormData((prevValue) => {
+      const responsibilities = [...prevValue.responsibilities];
+      responsibilities[index] = { ...responsibilities[index], [name]: value };
+      return { ...prevValue, responsibilities };
+    });
+  };
+
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
+  };
+
+  const handleQualificationChange = (index, event) => {
+    const { name, value } = event.target;
+    setFormData((prevValue) => {
+      const qualifications = [...prevValue.qualifications];
+      qualifications[index] = { ...qualifications[index], [name]: value };
+      return { ...prevValue, qualifications };
+    });
+  };
+
+  const publishJob = () => {
+    if (params.id) {
+      updateJob(formData.responsibilities);
+      setIsSnackbarOpen(true);
+    } else {
+      const updatedFormData = {
+        ...formData,
+        domains: [formData.domainId],
+      };
+      addJob(updatedFormData).then((response) => {
+        setIsSnackbarOpen(true);
+      });
+    }
+  };
+
+  useEffect(() => {
+    getAllDomains().then((response: any) => {
+      setDomainData(response.data);
+    });
+  }, []);
+
   return (
     <>
       <Header title="Jobs" />
       <center>
-        <Box style={{ marginTop: "30px", marginBottom: "66px" }}>
+        <Box style={{ marginTop: "10px", marginBottom: "66px" }}>
           <Container>
             <Grid container>
               <Grid item lg={12} xs={12}>
                 <Box className={classes.main}>
                   <Box className={classes.article}>
                     <Typography variant="h4">
-                      {params.id ? (
-                        <span className={classes.title}> Edit Job</span>
-                      ) : (
-                        <span className={classes.title}> Add Job</span>
-                      )}
+                      <span className={classes.title}>
+                        {" "}
+                        {params.id ? <>Edit Job</> : <>Add Job</>}{" "}
+                      </span>
                     </Typography>
                     <Link to="/jobs">
                       <img src={avator} alt="" width={45} />
@@ -75,6 +132,10 @@ const AddJobs = () => {
                       fullWidth
                       placeholder=" Enter a title"
                       id="fullWidth"
+                      name="title"
+                      required
+                      value={formData.title}
+                      onChange={handleChange}
                       sx={{ height: "45px" }}
                       inputProps={{
                         style: { caretColor: "#2A85FF" },
@@ -97,8 +158,11 @@ const AddJobs = () => {
                     <StyledTextField
                       type="text"
                       fullWidth
-                      placeholder=" Enter a title"
+                      placeholder=" Enter a location"
                       id="fullWidth"
+                      name="location"
+                      value={formData.location}
+                      onChange={handleChange}
                       sx={{ height: "45px" }}
                       inputProps={{
                         style: { caretColor: "#2A85FF" },
@@ -124,6 +188,9 @@ const AddJobs = () => {
                       rows={8}
                       minRows={8}
                       placeholder="Enter article body..."
+                      name="description"
+                      value={formData.description}
+                      onChange={handleChange}
                       sx={{
                         width: "100%",
                         padding: "13.5px 14px",
@@ -151,8 +218,11 @@ const AddJobs = () => {
                     <StyledTextField
                       type="text"
                       fullWidth
-                      placeholder=" Enter a title"
+                      placeholder=" Enter how to apply"
                       id="fullWidth"
+                      name="howToApply"
+                      value={formData.howToApply}
+                      onChange={handleChange}
                       sx={{ height: "45px" }}
                       inputProps={{
                         style: { caretColor: "#2A85FF" },
@@ -175,14 +245,80 @@ const AddJobs = () => {
                     <StyledTextField
                       type="text"
                       fullWidth
-                      placeholder=" Enter a title"
-                      id="fullWidth"
+                      placeholder=" Enter working hours"
+                      name="workingHours"
+                      value={formData.workingHours}
+                      onChange={handleChange}
                       sx={{ height: "45px" }}
                       inputProps={{
                         style: { caretColor: "#2A85FF" },
                       }}
                     />
                   </StyledInputField>
+                  {formData.responsibilities.map((responsibility, index) => (
+                    <StyledInputField key={index}>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontSize: "14px",
+                          color: "#333",
+                          textAlign: "left",
+                          fontWeight: "600",
+                          marginTop: "22px",
+                        }}
+                      >
+                        <span className={classes.title2}>Responsibility</span>
+                      </Typography>
+                      <StyledTextField
+                        type="text"
+                        fullWidth
+                        placeholder=" Enter a responsibility"
+                        id="fullWidth"
+                        name="title"
+                        value={responsibility.title}
+                        onChange={(event) =>
+                          handleResponsibilityChange(index, event)
+                        }
+                        sx={{ height: "45px" }}
+                        inputProps={{
+                          style: { caretColor: "#2A85FF" },
+                        }}
+                      />
+                    </StyledInputField>
+                  ))}
+
+                  {formData.qualifications.map((qualification, index) => (
+                    <StyledInputField>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontSize: "14px",
+                          color: "#333",
+                          textAlign: "left",
+                          fontWeight: "600",
+                          marginTop: "22px",
+                        }}
+                      >
+                        <span className={classes.title2}>Qualification</span>
+                      </Typography>
+                      <StyledTextField
+                        type="text"
+                        fullWidth
+                        placeholder=" Enter a qualification"
+                        id="fullWidth"
+                        name="title"
+                        value={qualification.title}
+                        onChange={(event) =>
+                          handleQualificationChange(index, event)
+                        }
+                        sx={{ height: "45px" }}
+                        inputProps={{
+                          style: { caretColor: "#2A85FF" },
+                        }}
+                      />
+                    </StyledInputField>
+                  ))}
+
                   <StyledInputField>
                     <Typography
                       variant="h6"
@@ -194,57 +330,7 @@ const AddJobs = () => {
                         marginTop: "22px",
                       }}
                     >
-                      <span className={classes.title2}>Responsibilities</span>
-                    </Typography>
-                    <StyledTextField
-                      type="text"
-                      fullWidth
-                      placeholder=" Enter a title"
-                      id="fullWidth"
-                      sx={{ height: "45px" }}
-                      inputProps={{
-                        style: { caretColor: "#2A85FF" },
-                      }}
-                    />
-                  </StyledInputField>
-                  <StyledInputField>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontSize: "14px",
-                        color: "#333",
-                        textAlign: "left",
-                        fontWeight: "600",
-                        marginTop: "22px",
-                      }}
-                    >
-                      <span className={classes.title2}>Qualifications</span>
-                    </Typography>
-                    <StyledTextField
-                      type="text"
-                      fullWidth
-                      placeholder=" Enter a title"
-                      id="fullWidth"
-                      sx={{ height: "45px" }}
-                      inputProps={{
-                        style: { caretColor: "#2A85FF" },
-                      }}
-                    />
-                  </StyledInputField>
-                  <StyledInputField>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontSize: "14px",
-                        color: "#333",
-                        textAlign: "left",
-                        fontWeight: "600",
-                        marginTop: "22px",
-                      }}
-                    >
-                      <span className={classes.title2}>
-                        &nbsp;&nbsp; Domains
-                      </span>
+                      <span className={classes.title2}>Domains</span>
                     </Typography>
 
                     <FormControl sx={{ m: 1, minWidth: 455 }} size="small">
@@ -252,17 +338,20 @@ const AddJobs = () => {
                         id="demo-select-small-label"
                         sx={{ color: "#999999" }}
                       >
-                        Select a domains
+                        Select a domain
                       </InputLabel>
                       <Select
                         labelId="demo-select-small-label"
                         id="demo-select-small"
-                        label="Age"
-                        sx={{ borderRadius: "35px" }}
+                        label="Domain"
+                        sx={{ borderRadius: "35px", textAlign: "left" }}
+                        name="domainId"
+                        value={formData.domainId}
+                        onChange={handleChange}
                       >
                         {domainData.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
+                          <MenuItem key={option.id} value={option.id}>
+                            {option.name}
                           </MenuItem>
                         ))}
                       </Select>
@@ -270,55 +359,6 @@ const AddJobs = () => {
                   </StyledInputField>
 
                   <StyledInputField>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontSize: "14px",
-                        color: "#333",
-                        textAlign: "left",
-                        fontWeight: "600",
-                        marginTop: "10px",
-                      }}
-                    >
-                      <span className={classes.title2}> Picture</span>
-                    </Typography>
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      spacing={2}
-                      className={classes.uploadImage}
-                      sx={{ justifyContent: "center" }}
-                    >
-                      <Button
-                        variant="contained"
-                        component="label"
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          boxShadow: "none",
-                          backgroundColor: "transparent",
-                          color: "#999",
-                          textTransform: "capitalize",
-                        }}
-                      >
-                        <Box className={classes.imageHeight}>
-                          <img src={upload} alt="" />
-                        </Box>
-                        <Typography
-                          variant="h6"
-                          sx={{
-                            fontSize: "14px",
-                            color: "#999",
-                            fontWeight: "600",
-                            marginTop: "15px",
-                            textAlign: "center",
-                          }}
-                        >
-                          Upload your images here
-                        </Typography>
-                        <input hidden accept="image/*" multiple type="file" />
-                      </Button>
-                    </Stack>{" "}
                     <br />
                     <Box
                       sx={{
@@ -344,6 +384,7 @@ const AddJobs = () => {
                       <StyledButton
                         variant="contained"
                         sx={{ textTransform: "none" }}
+                        onClick={publishJob}
                       >
                         <img
                           style={{
@@ -363,6 +404,21 @@ const AddJobs = () => {
             </Grid>
           </Container>
         </Box>
+        <Snackbar
+          open={isSnackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <MuiAlert
+            onClose={handleSnackbarClose}
+            severity="success"
+            elevation={6}
+            variant="filled"
+          >
+            Data added successfully
+          </MuiAlert>
+        </Snackbar>
       </center>
     </>
   );

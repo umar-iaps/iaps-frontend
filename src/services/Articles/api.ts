@@ -1,6 +1,10 @@
-import { get, post, put, remove } from "@utils/apiUtils";
-const baseURL = `Articles`;
-export const getAllArticles = async () => {
+import { get, post, remove } from "@utils/apiUtils";
+import { ApiResponse } from "src/types/ApiResponse";
+import { IArticle } from "@interfaces/IArticle";
+
+const baseURL: string = "Articles";
+
+export const getAllArticles = async (): Promise<ApiResponse<IArticle[]>> => {
   try {
     const response = await get(`${baseURL}/getAllForDashboard`);
     return { type: "success", data: response.data.dataResult };
@@ -9,7 +13,9 @@ export const getAllArticles = async () => {
   }
 };
 
-export const getAllArticlesByDomainId = async (domainId: any) => {
+export const getAllArticlesByDomainId = async (
+  domainId: any
+): Promise<ApiResponse<IArticle[]>> => {
   try {
     const response = await get(`${baseURL}/getAll/${domainId}`);
     return { type: "success", data: response.data };
@@ -18,7 +24,9 @@ export const getAllArticlesByDomainId = async (domainId: any) => {
   }
 };
 
-export const getArticleById = async (id: string) => {
+export const getArticleById = async (
+  id: string
+): Promise<ApiResponse<IArticle>> => {
   try {
     const response = await get(`${baseURL}/getById/${id}`);
     return { type: "success", data: response.data };
@@ -27,7 +35,9 @@ export const getArticleById = async (id: string) => {
   }
 };
 
-export const addArticle = async (articleData: any) => {
+export const addArticle = async (
+  articleData: any
+): Promise<ApiResponse<IArticle>> => {
   try {
     const response = await post(`${baseURL}/add`, articleData);
     return { type: "success", data: response.data };
@@ -36,18 +46,22 @@ export const addArticle = async (articleData: any) => {
   }
 };
 
-export const updateArticle = async (articleData: any) => {
+export const updateArticle = async (
+  articleData: any
+): Promise<ApiResponse<IArticle>> => {
   try {
-    const response = await put(`${baseURL}/edit`, articleData);
+    const response = await post(`${baseURL}/edit`, articleData);
     return { type: "success", data: response.data };
   } catch (error) {
     return { type: "error", data: error };
   }
 };
 
-export const deleteArticle = async (ArticleData: any) => {
+export const deleteArticle = async (
+  articleData: any
+): Promise<ApiResponse<IArticle>> => {
   try {
-    const response = await remove(`${baseURL}/delete`, ArticleData);
+    const response = await remove(`${baseURL}/delete`, articleData);
     return { type: "success", data: response.data };
   } catch (error) {
     return { type: "error", data: error };

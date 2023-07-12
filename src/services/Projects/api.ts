@@ -1,6 +1,10 @@
-const baseURL = `Projects`;
 import { get, post, put, remove } from "@utils/apiUtils";
-export const getAllProjects = async () => {
+import { ApiResponse } from "src/types/ApiResponse";
+import { IProject } from "@interfaces/IProject";
+
+const baseURL: string = "Projects";
+
+export const getAllProjects = async (): Promise<ApiResponse<IProject[]>> => {
   try {
     const response = await get(`${baseURL}/getAllforDashboard`);
     return { type: "success", data: response.data.dataResult };
@@ -9,47 +13,57 @@ export const getAllProjects = async () => {
   }
 };
 
-export const getAllProjectsByDomainId = async (domainId: any) => {
+export const getAllProjectsByDomainId = async (
+  domainId: any
+): Promise<ApiResponse<any>> => {
   try {
     const response = await get(`${baseURL}/getAll/${domainId}`);
     return { type: "success", data: response };
-  } catch (error) {
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };
 
-export const getProjectById = async (id: string) => {
+export const getProjectById = async (
+  id: string
+): Promise<ApiResponse<IProject>> => {
   try {
     const response = await get(`${baseURL}/getById/${id}`);
     return { type: "success", data: response.data.dataResult };
-  } catch (error) {
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };
 
-export const addProject = async (projectData: any) => {
+export const addProject = async (
+  projectData: any
+): Promise<ApiResponse<any>> => {
   try {
     const response = await post(`${baseURL}/add`, projectData);
     return { type: "success", data: response.data };
-  } catch (error) {
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };
 
-export const updateProject = async (projectData: any) => {
+export const updateProject = async (
+  projectData: any
+): Promise<ApiResponse<any>> => {
   try {
-    const response = await put(`${baseURL}/edit`, projectData);
+    const response = await post(`${baseURL}/edit`, projectData);
     return { type: "success", data: response.data };
-  } catch (error) {
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };
 
-export const deleteProject = async (projectData: any) => {
+export const deleteProject = async (
+  projectData: any
+): Promise<ApiResponse<any>> => {
   try {
     const response = await remove(`${baseURL}/delete`, projectData);
     return { type: "success", data: response.data };
-  } catch (error) {
+  } catch (error: any) {
     return { type: "error", data: error };
   }
 };

@@ -1,6 +1,6 @@
 import { makeStyles } from "@mui/styles";
 
-export default makeStyles((theme) => ({
+export default makeStyles(() => ({
   selected: {
     backgroundColor: "#C64B68 !important",
     marginLeft: "18px !important",
