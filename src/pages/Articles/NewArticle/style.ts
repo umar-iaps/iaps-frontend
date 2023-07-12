@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { makeStyles } from "@mui/styles";
 import {
   styled,

@@ -1,5 +1,5 @@
 import api from "@services/baseapi";
-import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosRequestConfig } from "axios";
 import { IApiError } from "@interfaces/IApiError";
 import { ApiResponse } from "../types/ApiResponse";
 
@@ -8,12 +8,12 @@ export const get = async <T>(
   config: AxiosRequestConfig = {}
 ): Promise<ApiResponse<T>> => {
   try {
-    const response = await api.get<T>(
+    const response: any = await api.get<T>(
       `${import.meta.env.VITE_API_URL}/${url}`,
       config
     );
-    return { type: "success", data: response.data };
-  } catch (error: Error & { code?: number; response?: AxiosResponse }) {
+    return { type: "success", data: response.data as any };
+  } catch (error: any) {
     const apiError: IApiError = {
       message: error.message,
       code: error.code,
@@ -29,13 +29,13 @@ export const post = async <T>(
   config: AxiosRequestConfig = {}
 ): Promise<ApiResponse<T>> => {
   try {
-    const response = await api.post<T>(
+    const response: any = await api.post<T>(
       `${import.meta.env.VITE_API_URL}/${url}`,
       data,
       config
     );
-    return { type: "success", data: response.data };
-  } catch (error: Error & { code?: number; response?: AxiosResponse }) {
+    return { type: "success", data: response.data as any };
+  } catch (error: any) {
     const apiError: IApiError = {
       message: error.message,
       code: error.code,
@@ -51,13 +51,13 @@ export const put = async <T>(
   config: AxiosRequestConfig = {}
 ): Promise<ApiResponse<T>> => {
   try {
-    const response = await api.post<T>(
+    const response: any = await api.post<T>(
       `${import.meta.env.VITE_API_URL}/${url}`,
       data,
       config
     );
-    return { type: "success", data: response.data };
-  } catch (error: Error & { code?: number; response?: AxiosResponse }) {
+    return { type: "success", data: response.data as any };
+  } catch (error: any) {
     const apiError: IApiError = {
       message: error.message,
       code: error.code,
@@ -73,13 +73,13 @@ export const remove = async <T>(
   config: AxiosRequestConfig = {}
 ): Promise<ApiResponse<T>> => {
   try {
-    const response = await api.post<T>(
+    const response: any = await api.post<T>(
       `${import.meta.env.VITE_API_URL}/${url}`,
       data,
       config
     );
-    return { type: "success", data: response.data };
-  } catch (error: Error & { code?: number; response?: AxiosResponse }) {
+    return { type: "success", data: response.data as any };
+  } catch (error: any) {
     const apiError: IApiError = {
       message: error.message,
       code: error.code,

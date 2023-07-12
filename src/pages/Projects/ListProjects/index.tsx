@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// @ts-nocheck
+import { useEffect, useState } from "react";
 import {
   Box,
   FormControl,
@@ -159,7 +160,7 @@ const Projects = () => {
                     label="Age"
                     sx={{ borderRadius: "35px", textAlign: "left" }}
                   >
-                    {sectors.map((option) => (
+                    {sectors.map((option: any) => (
                       <MenuItem key={option.id} value={option.id}>
                         {option.name}
                       </MenuItem>
@@ -181,7 +182,7 @@ const Projects = () => {
                     onChange={handleChange}
                     sx={{ borderRadius: "35px", textAlign: "left" }}
                   >
-                    {regions.map((option) => (
+                    {regions.map((option: any) => (
                       <MenuItem key={option.id} value={option.id}>
                         {option.name}
                       </MenuItem>

@@ -34,11 +34,11 @@ const LastAdmins = () => {
     }
   }, [searchTerm]);
 
-  const handleEdit = (id: string) => {
+  const handleEdit = (id: string): any => {
     navigate(`/admins/${id}`);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: string): any => {
     let newData = filteredTableContent.filter((item) => {
       return item.id !== id;
     });
@@ -53,7 +53,7 @@ const LastAdmins = () => {
 
   const filterTableContent = (term: string) => {
     const filteredData = tableData.filter(
-      (item) =>
+      (item: any) =>
         item.title.toLowerCase().includes(term.toLowerCase()) ||
         item.country.toLowerCase().includes(term.toLowerCase()) ||
         item.body.toLowerCase().includes(term.toLowerCase())
@@ -121,7 +121,9 @@ const LastAdmins = () => {
                 path="/admins"
                 tableContent={filteredTableContent}
                 tableHeadingData={adminHeadingData}
+                // @ts-ignore
                 onEdit={handleEdit}
+                // @ts-ignore
                 onDelete={handleDelete}
               />
             )}

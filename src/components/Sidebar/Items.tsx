@@ -15,20 +15,20 @@ import useStyles from "./style";
 const SidebarItems = (): JSX.Element => {
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
-  const [isSidebar, setIsSidebar] = useState<boolean>(true);
+  // const [isSidebar, setIsSidebar] = useState<boolean>(true);
 
   function handleListItemClick(index: number) {
     setSelectedIndex(index);
   }
 
-  const hideSidebar = () => {
-    setIsSidebar(false);
-  };
+  // const hideSidebar = () => {
+  //   setIsSidebar(false);
+  // };
 
   return (
     <List sx={{ marginTop: "22px" }}>
       {sidebarData
-        ?.filter((item: I) => item.type === "mainPath")
+        ?.filter((item: any) => item.type === "mainPath")
         .map((item: ISideBarDataItem, index: number) => (
           <Link
             to={item.path}

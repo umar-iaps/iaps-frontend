@@ -6,7 +6,7 @@ export const getAllReportsByDomainId = async (
   id: string
 ): Promise<ApiResponse<IReport[]>> => {
   try {
-    const response = await get(`${baseURL}/getAll/${id}`);
+    const response: any = await get(`${baseURL}/getAll/${id}`);
     return { type: "success", data: response.data.data };
   } catch (error: any) {
     return { type: "error", data: error };
@@ -15,8 +15,8 @@ export const getAllReportsByDomainId = async (
 
 export const getAllReports = async (): Promise<ApiResponse<IReport[]>> => {
   try {
-    const response = await get(`${baseURL}/getAllForDashboard`);
-    return { type: "success", data: response.data.dataResult };
+    const response: any = await get(`${baseURL}/getAllForDashboard`);
+    return { type: "success", data: response?.data?.dataResult };
   } catch (error: any) {
     return { type: "error", data: error };
   }
@@ -26,8 +26,8 @@ export const getReportById = async (
   id: string
 ): Promise<ApiResponse<IReport>> => {
   try {
-    const response = await get(`${baseURL}/getById/${id}`);
-    return { type: "success", data: response.data.dataResult };
+    const response: any = await get(`${baseURL}/getById/${id}`);
+    return { type: "success", data: response?.data?.dataResult };
   } catch (error: any) {
     return { type: "error", data: error };
   }
@@ -35,8 +35,8 @@ export const getReportById = async (
 
 export const addReport = async (reportData: any): Promise<ApiResponse<any>> => {
   try {
-    const response = await post(`${baseURL}/add`, reportData);
-    return { type: "success", data: response.data };
+    const response: any = await post(`${baseURL}/add`, reportData);
+    return { type: "success", data: response.data as any };
   } catch (error: any) {
     return { type: "error", data: error };
   }
@@ -46,8 +46,8 @@ export const updateReport = async (
   reportData: any
 ): Promise<ApiResponse<any>> => {
   try {
-    const response = await put(`${baseURL}/edit`, reportData);
-    return { type: "success", data: response.data };
+    const response: any = await put(`${baseURL}/edit`, reportData);
+    return { type: "success", data: response.data as any };
   } catch (error: any) {
     return { type: "error", data: error };
   }
@@ -57,8 +57,8 @@ export const deleteReport = async (
   reportData: any
 ): Promise<ApiResponse<any>> => {
   try {
-    const response = await remove(`${baseURL}/delete`, reportData);
-    return { type: "success", data: response.data };
+    const response: any = await remove(`${baseURL}/delete`, reportData);
+    return { type: "success", data: response.data as any };
   } catch (error: any) {
     return { type: "error", data: error };
   }

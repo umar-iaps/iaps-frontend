@@ -38,6 +38,7 @@ const MembersList = () => {
     setLoading(true);
     getAllMembers()
       .then((response: ApiResponse<IMember[]>) => {
+        // @ts-ignore
         const membersData: IMember[] = response.data;
         const newData: MemberData[] = membersData.map((item) => ({
           id: item.id,
@@ -68,7 +69,7 @@ const MembersList = () => {
   const handleDelete = (id: string) => {
     const delObj = { id };
     deleteMember(delObj)
-      .then((response) => {
+      .then(() => {
         let newData = filteredTableContent.filter((item) => {
           return item.id !== id;
         });
@@ -167,7 +168,9 @@ const MembersList = () => {
                 path="/employees"
                 tableContent={filteredTableContent}
                 tableHeadingData={memberHeadingData}
+                // @ts-ignore
                 onEdit={handleEdit}
+                // @ts-ignore
                 onDelete={handleDelete}
               />
             )}

@@ -40,7 +40,7 @@ const AddSector = () => {
       slug: "",
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: () => {
       // Handle form submission
     },
   });
@@ -49,7 +49,7 @@ const AddSector = () => {
     setLoading(true);
     if (params.id) {
       getSectorById(params.id)
-        .then((response) => {
+        .then((response: any) => {
           setData(response.data);
         })
         .catch((error) => {
@@ -71,6 +71,9 @@ const AddSector = () => {
     setSnackbarMessage(
       params.id ? "Sector updated successfully!" : "Sector added successfully!"
     );
+    setTimeout(() => {
+      navigate("/sectors");
+    }, 2000);
   };
 
   return (
@@ -115,6 +118,7 @@ const AddSector = () => {
                           type="text"
                           fullWidth
                           name="sectorName"
+                          // @ts-ignore
                           value={data?.name}
                           onChange={formik.handleChange}
                           placeholder="Enter Sector Name"
@@ -123,6 +127,7 @@ const AddSector = () => {
                           inputProps={{
                             style: { caretColor: "#2A85FF" },
                           }}
+                          // @ts-ignore
                           error={
                             formik.touched.sectorName &&
                             formik.errors.sectorName
@@ -143,6 +148,7 @@ const AddSector = () => {
                           type="text"
                           fullWidth
                           name="description"
+                          // @ts-ignore
                           value={data?.description}
                           onChange={formik.handleChange}
                           placeholder="Enter Sector Description"
@@ -151,6 +157,7 @@ const AddSector = () => {
                           inputProps={{
                             style: { caretColor: "#2A85FF" },
                           }}
+                          // @ts-ignore
                           error={
                             formik.touched.description &&
                             formik.errors.description
@@ -170,6 +177,7 @@ const AddSector = () => {
                           type="text"
                           fullWidth
                           name="slug"
+                          // @ts-ignore
                           value={data?.slug}
                           onChange={formik.handleChange}
                           placeholder="Enter Sector Slug"
@@ -178,6 +186,7 @@ const AddSector = () => {
                           inputProps={{
                             style: { caretColor: "#2A85FF" },
                           }}
+                          // @ts-ignore
                           error={formik.touched.slug && formik.errors.slug}
                           helperText={formik.touched.slug && formik.errors.slug}
                         />

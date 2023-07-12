@@ -1,6 +1,6 @@
-import { ITableData } from "@interfaces/ITableData";
+// import { ITableData } from "@interfaces/ITableData";
 
-export const tableData: ITableData[] = [
+export const tableData: any = [
   {
     id: 1,
     title: "Article’s Title",

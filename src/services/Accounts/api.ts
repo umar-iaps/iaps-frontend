@@ -8,7 +8,7 @@ const baseURL: string = "Accounts";
 export const login = async (loginData: ILoginData): Promise<IApiResponse> => {
   try {
     const response = await post(`${baseURL}/login`, loginData);
-    return { type: "success", data: response.data };
+    return { type: "success", data: response.data as any };
   } catch (error) {
     return { type: "error", data: error };
   }
@@ -19,7 +19,7 @@ export const registerAdmin = async (
 ): Promise<IApiResponse> => {
   try {
     const response = await post(`${baseURL}/registerAdmin`, registerData);
-    return { type: "success", data: response.data };
+    return { type: "success", data: response.data as any };
   } catch (error) {
     return { type: "error", data: error };
   }
@@ -30,7 +30,7 @@ export const changePassword = async (
 ): Promise<IApiResponse> => {
   try {
     const response = await post(`${baseURL}/changePassword`, passwordData);
-    return { type: "success", data: response.data };
+    return { type: "success", data: response.data as any };
   } catch (error) {
     return { type: "error", data: error };
   }

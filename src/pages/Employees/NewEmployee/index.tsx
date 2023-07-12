@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// @ts-nocheck
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -26,7 +27,11 @@ import publish from "@assets/icons/publish.svg";
 import view from "@assets/icons/view.svg";
 import Header from "@components/Topbar/Header.tsx";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { addMember, getMemberById } from "@services/Members/api.ts";
+import {
+  addMember,
+  getMemberById,
+  updateMember,
+} from "@services/Members/api.ts";
 import { getAllDomains } from "@services/Domains/api.ts";
 import MuiAlert from "@mui/material/Alert";
 
@@ -36,7 +41,6 @@ const AddEmployees = () => {
   const navigate = useNavigate();
   const [domains, setDomains] = useState([]);
   const [data, setData] = useState({});
-  const [newData, setNewData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
 
@@ -51,34 +55,49 @@ const AddEmployees = () => {
       });
   }, [params?.id]);
 
-  const handleChange = (e) => {
-    if (params?.id) {
-      let newData = { ...data };
+  const handleChange = (e: any) => {
+    const { name, value, files } = e.target;
+    if (name == "image") {
+      setData((prev) => {
+        return { ...prev, [name]: files[0] };
+      });
+      return;
     }
-    const name = e.target.name;
-    let value = e.target.value;
-    if (name === "image") {
-      value = e.target.files[0];
-    }
-    if (name === "Domains") {
-      // const selectedItem = domains.filter((item) => item.name === value);
-    }
-    setNewData((prevData) => {
-      return { ...prevData, [name]: value };
+
+    setData((prev) => {
+      return { ...prev, [name]: value };
     });
   };
 
   const publishMember = () => {
-    let formData = new FormData();
-    formData.append("FullName", newData.fullName);
-    formData.append("Position", newData.position);
-    formData.append("Bio", newData.bio);
-    formData.append("ImageFile", newData.image);
-    formData.append("Domains", newData.domains);
-    addMember(formData).then((response) => {
-      setIsSnackbarOpen(true);
-      // navigate("/employees");
-    });
+    if (params?.id) {
+      let formData = new FormData();
+      formData.append("Id", data?.id);
+      formData.append("FullName", data?.fullName);
+      formData.append("Position", data?.position);
+      formData.append("Bio", data?.bio);
+      formData.append("ImageFile", data?.image);
+      formData.append("Domains", data?.domains[0]?.id || data?.domains);
+      updateMember(formData).then((response: any) => {
+        setIsSnackbarOpen(true);
+        setTimeout(() => {
+          navigate("/employees");
+        });
+      });
+    } else {
+      let formData = new FormData();
+      formData.append("FullName", data?.fullName);
+      formData.append("Position", data?.position);
+      formData.append("Bio", data?.bio);
+      formData.append("ImageFile", data?.image);
+      formData.append("Domains", data?.domains);
+      addMember(formData).then((response: any) => {
+        setIsSnackbarOpen(true);
+        setTimeout(() => {
+          navigate("/employees");
+        });
+      });
+    }
   };
 
   const handleSnackbarClose = () => {
@@ -138,11 +157,11 @@ const AddEmployees = () => {
                     <StyledTextField
                       type="text"
                       fullWidth
-                      value={data?.fullName}
                       onChange={handleChange}
                       name="fullName"
                       placeholder=" Enter a title"
                       id="fullWidth"
+                      value={data?.fullName}
                       sx={{ height: "45px" }}
                       inputProps={{
                         style: { caretColor: "#2A85FF" },
@@ -237,7 +256,7 @@ const AddEmployees = () => {
                         label="Age"
                         sx={{ borderRadius: "35px", textAlign: "left" }}
                       >
-                        {domains?.map((option) => (
+                        {domains?.map((option: any) => (
                           <MenuItem key={option.id} value={option.id}>
                             {option.name}
                           </MenuItem>
@@ -296,6 +315,7 @@ const AddEmployees = () => {
                         <input
                           hidden
                           onChange={handleChange}
+                          // value={data?.image}
                           name="image"
                           accept="image/*"
                           type="file"

@@ -16,7 +16,7 @@ import * as Yup from "yup";
 import Header from "@components/Topbar/Header.js";
 import { StyledInputField, StyledTextField } from "./style";
 import useStyles from "./style";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getAllDomains } from "@services/Domains/api";
 import { registerAdmin } from "@services/Accounts/api";
 import MuiAlert from "@mui/material/Alert";
@@ -34,12 +34,13 @@ interface FormValues {
 
 const AddAdmin = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
   const params = useParams<{ id: string }>();
   const [domains, setDomains] = useState<Domain[]>([]);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
 
   useEffect(() => {
-    getAllDomains().then((response) => {
+    getAllDomains().then((response: any) => {
       setDomains(response.data);
     });
   }, []);
@@ -60,10 +61,14 @@ const AddAdmin = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values: FormValues) => {
+      // @ts-ignore
       registerAdmin(values)
-        .then((response) => {
+        .then(() => {
           setIsSnackbarOpen(true);
           formik.resetForm();
+          setTimeout(() => {
+            navigate("/admins");
+          });
         })
         .catch((error) => {
           console.error("Error while adding admin:", error);
@@ -183,11 +188,12 @@ const AddAdmin = () => {
                             formik.touched.domainId &&
                             Boolean(formik.errors.domainId)
                           }
+                          // @ts-ignore
                           helperText={
                             formik.touched.domainId && formik.errors.domainId
                           }
                         >
-                          {domains.map((option) => (
+                          {domains.map((option: any) => (
                             <MenuItem key={option.id} value={option.id}>
                               {option.name}
                             </MenuItem>

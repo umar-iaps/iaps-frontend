@@ -14,8 +14,7 @@ import { useSelector } from "react-redux";
 import { IHeaderProps } from "@interfaces/IHeaderProps.ts";
 
 const Header: React.FC<IHeaderProps> = (props) => {
-  const user = useSelector((state) => state.userDetails.user.user);
-  console.log("user data", user);
+  const user = useSelector((state: any) => state.userDetails.user.user);
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
       <StyledAppBar>

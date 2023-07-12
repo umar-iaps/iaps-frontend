@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useEffect } from "react";
 import { Box, Typography, Snackbar } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -23,6 +24,14 @@ const ListJobs = () => {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (searchTerm === "") {
+      setFilteredTableContent(tableData);
+    } else {
+      filterTableContent(searchTerm);
+    }
+  }, [searchTerm, tableData]);
 
   useEffect(() => {
     setLoading(true);
@@ -57,8 +66,8 @@ const ListJobs = () => {
   const filterTableContent = (term) => {
     const filteredData = tableData.filter(
       (item) =>
-        item.name.toLowerCase().includes(term.toLowerCase()) ||
-        item.position.toLowerCase().includes(term.toLowerCase())
+        item.title.toLowerCase().includes(term.toLowerCase()) ||
+        item.location.toLowerCase().includes(term.toLowerCase())
     );
     setFilteredTableContent(filteredData);
   };

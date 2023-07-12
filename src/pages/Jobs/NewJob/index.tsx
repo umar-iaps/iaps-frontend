@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   Box,
   Container,
@@ -13,7 +14,7 @@ import avator from "@assets/icons/Avatar.svg";
 import publish from "@assets/icons/publish.svg";
 import view from "@assets/icons/view.svg";
 import Header from "@components/Topbar/Header.tsx";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import {
   StyledButton,
   StyledInputField,
@@ -25,10 +26,11 @@ import { addJob, updateJob } from "../../../services/Jobs/api.ts";
 import { Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 import { getAllDomains } from "../../../services/Domains/api.ts";
-
+import { useNavigate } from "react-router-dom";
 const AddJobs = () => {
   const classes = useStyles();
   const params = useParams();
+  const navigate = useNavigate();
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [domainData, setDomainData] = useState([]);
   const [formData, setFormData] = useState({
@@ -42,7 +44,7 @@ const AddJobs = () => {
     domainId: "",
   });
 
-  const handleChange = (event) => {
+  const handleChange = (event: any) => {
     const { name, value } = event.target;
     setFormData((prevValue) => ({
       ...prevValue,
@@ -50,7 +52,7 @@ const AddJobs = () => {
     }));
   };
 
-  const handleResponsibilityChange = (index, event) => {
+  const handleResponsibilityChange = (index: any, event: any) => {
     const { name, value } = event.target;
     setFormData((prevValue) => {
       const responsibilities = [...prevValue.responsibilities];
@@ -76,6 +78,9 @@ const AddJobs = () => {
     if (params.id) {
       updateJob(formData.responsibilities);
       setIsSnackbarOpen(true);
+      setTimeout(() => {
+        navigate("/jobs");
+      });
     } else {
       const updatedFormData = {
         ...formData,
@@ -83,6 +88,9 @@ const AddJobs = () => {
       };
       addJob(updatedFormData).then((response) => {
         setIsSnackbarOpen(true);
+        setTimeout(() => {
+          navigate("/jobs");
+        });
       });
     }
   };
@@ -276,7 +284,7 @@ const AddJobs = () => {
                         id="fullWidth"
                         name="title"
                         value={responsibility.title}
-                        onChange={(event) =>
+                        onChange={(event: any) =>
                           handleResponsibilityChange(index, event)
                         }
                         sx={{ height: "45px" }}
@@ -349,7 +357,7 @@ const AddJobs = () => {
                         value={formData.domainId}
                         onChange={handleChange}
                       >
-                        {domainData.map((option) => (
+                        {domainData.map((option: any) => (
                           <MenuItem key={option.id} value={option.id}>
                             {option.name}
                           </MenuItem>

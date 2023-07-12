@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+// @ts-nocheck
+import { useState, useEffect } from "react";
 import {
+  Snackbar,
   Box,
   Button,
   Container,
@@ -40,6 +42,7 @@ const AddReports = () => {
   const [data, setData] = useState([]);
   const [sectors, setSectors] = useState([]);
   const [domains, setDomains] = useState([]);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [regions, setRegions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -70,24 +73,42 @@ const AddReports = () => {
     },
   });
 
+  const handleSnackbarClose = () => {
+    setIsSnackbarOpen(false);
+  };
+
   const handleChange = (event) => {
     let { name, value, files } = event.target;
     if (name === "pdfFile") {
+      setData((prev: any) => {
+        return { ...data, [name]: files[0] };
+      });
+      return;
       formik.setFieldValue(name, files[0]);
-    } else if (name === "sector") {
+    }
+    if (name === "sector") {
       const selectedItem = sectors.find((item) => item?.name === value);
       value = selectedItem?.id;
-      formik.setFieldValue(name, value);
-    } else if (name === "region") {
+      setData((prev: any) => {
+        return { ...data, [name]: value };
+      });
+    }
+    if (name === "region") {
       const selectedItem = regions.find((item) => item?.name === value);
       value = selectedItem?.id;
-      formik.setFieldValue(name, value);
+      setData((prev: any) => {
+        return { ...data, [name]: value };
+      });
     } else if (name === "domain") {
       const selectedItem = domains.find((item) => item?.name === value);
       value = selectedItem?.id;
-      formik.setFieldValue(name, value);
+      setData((prev: any) => {
+        return { ...data, [name]: value };
+      });
     } else {
-      formik.setFieldValue(name, value);
+      setData((prev: any) => {
+        return { ...data, [name]: value };
+      });
     }
   };
 
@@ -96,16 +117,26 @@ const AddReports = () => {
   };
 
   const submitForm = (values) => {
+    console.log("in submit", values);
     const formData = new FormData();
-    formData.append("Title", values.title);
-    formData.append("Expertize", values.expertize);
-    formData.append("Year", values.year);
-    formData.append("Domains", values.domain);
-    formData.append("Sectors", values.sector);
-    formData.append("Regions", values.region);
+    formData.append("Title", data?.title);
+    formData.append("Expertize", data?.expertize);
+    formData.append("Year", data?.year);
+    formData.append("Domains", data?.domain);
+    formData.append("Sectors", data?.sector);
+    formData.append("Regions", data?.region);
     formData.append("PdfFile", values.pdfFile);
     addReport(formData).then((response) => {
-      toggleModal(); // Open the success modal
+      // toggleModal(); // Open the success modal
+      setIsSnackbarOpen(true);
+      setSnackbarMessage(
+        params.id
+          ? "Reports updated successfully!"
+          : "Reports added successfully!"
+      );
+      setTimeout(() => {
+        navigate("/reports");
+      }, 2000);
     });
   };
 
@@ -192,14 +223,13 @@ const AddReports = () => {
                         placeholder=" Enter a title"
                         name="title"
                         value={data?.title}
-                        onChange={formik.handleChange}
+                        onChange={handleChange}
                         id="title"
                         sx={{ height: "45px" }}
                         inputProps={{
                           style: { caretColor: "#2A85FF" },
                         }}
                         error={formik.touched.title && formik.errors.title}
-                        helperText={formik.touched.title && formik.errors.title}
                       />
                     </StyledInputField>
 
@@ -222,7 +252,7 @@ const AddReports = () => {
                         placeholder="Enter article expertize..."
                         name="expertize"
                         value={data?.expertize}
-                        onChange={formik.handleChange}
+                        onChange={handleChange}
                         error={
                           formik.touched.expertize && formik.errors.expertize
                         }
@@ -241,7 +271,7 @@ const AddReports = () => {
                         placeholder=" Enter a year"
                         name="year"
                         value={data?.year}
-                        onChange={formik.handleChange}
+                        onChange={handleChange}
                         id="year"
                         sx={{ height: "45px" }}
                         inputProps={{
@@ -278,8 +308,8 @@ const AddReports = () => {
                           labelId="demo-select-small-label"
                           id="demo-select-small"
                           name="domain"
-                          value={formik.values.domain}
-                          onChange={formik.handleChange}
+                          value={data?.domains[0].name}
+                          onChange={handleChange}
                           label="Age"
                           sx={{ borderRadius: "35px", textAlign: "left" }}
                           error={formik.touched.domain && formik.errors.domain}
@@ -287,7 +317,7 @@ const AddReports = () => {
                             formik.touched.domain && formik.errors.domain
                           }
                         >
-                          {domains.map((option) => (
+                          {domains.map((option: any) => (
                             <MenuItem key={option.id} value={option.id}>
                               {option.name}
                             </MenuItem>
@@ -328,8 +358,8 @@ const AddReports = () => {
                               labelId="demo-select-small-label"
                               id="demo-select-small"
                               name="sector"
-                              value={formik.values.sector}
-                              onChange={formik.handleChange}
+                              // value={data?.sectors[0].name}
+                              onChange={handleChange}
                               label="Age"
                               sx={{ borderRadius: "35px", textAlign: "left" }}
                               error={
@@ -339,7 +369,7 @@ const AddReports = () => {
                                 formik.touched.sector && formik.errors.sector
                               }
                             >
-                              {sectors.map((option) => (
+                              {sectors.map((option: any) => (
                                 <MenuItem key={option.id} value={option.id}>
                                   {option.name}
                                 </MenuItem>
@@ -379,8 +409,8 @@ const AddReports = () => {
                               labelId="demo-select-small-label"
                               id="demo-select-small"
                               name="region"
-                              value={formik.values.region}
-                              onChange={formik.handleChange}
+                              // value={formik.values.region}
+                              onChange={handleChange}
                               label="Age"
                               sx={{ borderRadius: "35px", textAlign: "left" }}
                               error={
@@ -390,7 +420,7 @@ const AddReports = () => {
                                 formik.touched.region && formik.errors.region
                               }
                             >
-                              {regions.map((option) => (
+                              {regions.map((option: any) => (
                                 <MenuItem key={option.id} value={option.id}>
                                   {option.name}
                                 </MenuItem>
@@ -484,6 +514,7 @@ const AddReports = () => {
                         <StyledButton
                           variant="contained"
                           sx={{ textTransform: "none" }}
+                          onClick={submitForm}
                           type="submit"
                         >
                           <img

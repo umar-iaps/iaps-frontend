@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+// @ts-nocheck
+import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -61,7 +62,7 @@ const AddArticle = () => {
       });
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value, files } = e.target;
     if (name === "countries") {
       return;
@@ -84,7 +85,9 @@ const AddArticle = () => {
       formData.append("Domains", data?.domains[0].id);
       updateArticle(formData).then((response) => {
         setIsSnackbarOpen(true);
-        // navigate("/articles");
+        setTimeout(() => {
+          navigate("/articles");
+        });
       });
     } else {
       let formData = new FormData();
@@ -94,7 +97,9 @@ const AddArticle = () => {
       formData.append("Domains", "d598e974-d7ed-4994-a2dd-2e3fdf410c2e");
       addArticle(formData).then((response) => {
         setIsSnackbarOpen(true);
-        // navigate("/articles");
+        setTimeout(() => {
+          navigate("/articles");
+        }, 2000);
       });
     }
   };
@@ -251,7 +256,7 @@ const AddArticle = () => {
                         label="Age"
                         sx={{ borderRadius: "35px", textAlign: "left" }}
                       >
-                        {countries.map((option) => (
+                        {countries.map((option: any) => (
                           <MenuItem key={option.id} value={option.name}>
                             {option.name}
                           </MenuItem>

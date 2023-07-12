@@ -6,8 +6,8 @@ const baseURL = "Countries";
 
 export const getAllCountries = async (): Promise<ApiResponse<ICountry[]>> => {
   try {
-    const response = await get(`${baseURL}/getAll`);
-    return { type: "success", data: response.data.dataResult };
+    const response: any = await get(`${baseURL}/getAll`);
+    return { type: "success", data: response?.data?.dataResult };
   } catch (error: any) {
     return { type: "error", data: error };
   }
