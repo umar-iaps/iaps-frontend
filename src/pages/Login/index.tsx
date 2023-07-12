@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -18,12 +18,16 @@ import { login } from "@services/Accounts/api";
 import CircularProgress from "@mui/material/CircularProgress";
 import { setUser } from "../../userSlice";
 import { useDispatch } from "react-redux";
-
 const Login = () => {
   const [loginError, setLoginError] = useState(false);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
+  }, []);
 
   const validationSchema = yup.object({
     email: yup.string().email("Invalid email").required("Email is required"),

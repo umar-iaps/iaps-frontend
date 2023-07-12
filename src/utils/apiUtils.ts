@@ -9,7 +9,7 @@ export const get = async <T>(
 ): Promise<ApiResponse<T>> => {
   try {
     const response: any = await api.get<T>(
-      `${import.meta.env.VITE_API_URL}/${url}`,
+      `https://iapstest.peoplefirstdevelopment.org/api/${url}`,
       config
     );
     return { type: "success", data: response.data as any };
@@ -30,7 +30,7 @@ export const post = async <T>(
 ): Promise<ApiResponse<T>> => {
   try {
     const response: any = await api.post<T>(
-      `${import.meta.env.VITE_API_URL}/${url}`,
+      `https://iapstest.peoplefirstdevelopment.org/api/${url}`,
       data,
       config
     );
@@ -52,7 +52,7 @@ export const put = async <T>(
 ): Promise<ApiResponse<T>> => {
   try {
     const response: any = await api.post<T>(
-      `${import.meta.env.VITE_API_URL}/${url}`,
+      `https://iapstest.peoplefirstdevelopment.org/api/${url}`,
       data,
       config
     );
@@ -74,7 +74,7 @@ export const remove = async <T>(
 ): Promise<ApiResponse<T>> => {
   try {
     const response: any = await api.post<T>(
-      `${import.meta.env.VITE_API_URL}/${url}`,
+      `https://iapstest.peoplefirstdevelopment.org/api/${url}`,
       data,
       config
     );

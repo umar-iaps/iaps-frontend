@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 // import { IApiConfig } from "@interfaces/IApiConfig";
 
 const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.REACT_APP_API_URL,
+  baseURL: "https://iapstest.peoplefirstdevelopment.org/api",
 });
 
 api.interceptors.request.use((config: any) => {
