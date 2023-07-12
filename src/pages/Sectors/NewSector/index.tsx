@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 import Header from "@components/Topbar/Header.js";
 import { StyledInputField, StyledTextField } from "./style.ts";
 import useStyles from "./style.ts";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import avator from "@assets/icons/Avatar.svg";
@@ -21,6 +21,7 @@ import MuiAlert from "@mui/material/Alert";
 const AddSector = () => {
   const classes = useStyles();
   const params = useParams();
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
