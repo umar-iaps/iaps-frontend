@@ -3,7 +3,6 @@ import {
   TextSnippetOutlined,
   PeopleOutline,
   SettingsOutlined,
-  LoginOutlined,
 } from "@mui/icons-material";
 import { ISideBarDataItem } from "@interfaces/ISidebarItem";
 
