@@ -66,6 +66,8 @@ const useStyles = makeStyles(() => ({
   },
   article: {
     textAlign: "center",
+    display: "flex",
+    justifyContent: "space-between",
   },
   btns: {
     borderRadius: "26px !important",

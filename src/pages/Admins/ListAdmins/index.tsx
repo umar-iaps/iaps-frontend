@@ -87,7 +87,7 @@ const LastAdmins = () => {
               <Box sx={{ mt: 2 }}>
                 <StyledSearch
                   placeholder="Search"
-                  InputProps={{ endAdornment: <StyledIcon /> }}
+                  InputProps={{ startAdornment: <StyledIcon /> }}
                   onChange={handleSearchChange}
                   value={searchTerm}
                 />

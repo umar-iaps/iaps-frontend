@@ -35,7 +35,7 @@ const sideBarData: ISideBarDataItem[] = [
   {
     path: "/employees",
     icon: <PeopleOutline />,
-    text: "Employees",
+    text: "Team",
     type: "mainPath",
   },
   {
@@ -60,12 +60,6 @@ const sideBarData: ISideBarDataItem[] = [
     path: "/settings",
     icon: <SettingsOutlined />,
     text: "Settings",
-    type: "setting",
-  },
-  {
-    path: "/logout",
-    icon: <LoginOutlined />,
-    text: "Logout",
     type: "setting",
   },
 ];

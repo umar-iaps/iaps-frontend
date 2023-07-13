@@ -81,33 +81,12 @@ const AddReports = () => {
     let { name, value, files } = event.target;
     if (name === "pdfFile") {
       setData((prev: any) => {
-        return { ...data, [name]: files[0] };
+        return { ...prev, [name]: files[0] };
       });
-      return;
-      formik.setFieldValue(name, files[0]);
-    }
-    if (name === "sector") {
-      const selectedItem = sectors.find((item) => item?.name === value);
-      value = selectedItem?.id;
-      setData((prev: any) => {
-        return { ...data, [name]: value };
-      });
-    }
-    if (name === "region") {
-      const selectedItem = regions.find((item) => item?.name === value);
-      value = selectedItem?.id;
-      setData((prev: any) => {
-        return { ...data, [name]: value };
-      });
-    } else if (name === "domain") {
-      const selectedItem = domains.find((item) => item?.name === value);
-      value = selectedItem?.id;
-      setData((prev: any) => {
-        return { ...data, [name]: value };
-      });
+      // formik.setFieldValue(name, files[0]);
     } else {
       setData((prev: any) => {
-        return { ...data, [name]: value };
+        return { ...prev, [name]: value };
       });
     }
   };
@@ -235,7 +214,7 @@ const AddReports = () => {
 
                     <StyledInputField>
                       <StyledTypography variant="h6" sx={{ textAlign: "left" }}>
-                        <span className={classes.title2}>Expertize</span>
+                        <span className={classes.title2}>Expertise</span>
                       </StyledTypography>
 
                       <StyledTextarea
@@ -308,7 +287,7 @@ const AddReports = () => {
                           labelId="demo-select-small-label"
                           id="demo-select-small"
                           name="domain"
-                          value={data?.domains[0].name}
+                          // value={data?.domains[0].name}
                           onChange={handleChange}
                           label="Age"
                           sx={{ borderRadius: "35px", textAlign: "left" }}

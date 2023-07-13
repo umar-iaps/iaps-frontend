@@ -13,13 +13,14 @@ export const StyledSearch = styled(TextField)(() => ({
     borderRadius: "26px",
     height: "45px",
     "& input": {
-      textAlign: "center",
+      textAlign: "left",
     },
   },
 }));
 
 export const StyledIcon = styled(SearchIcon)(() => ({
-  transform: "translate(-44px, 2px)",
+  // transform: "translate(-44px, 2px)",
+  margin: "10px",
   color: " #999",
   fontSize: "22px",
 }));

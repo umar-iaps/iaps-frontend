@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import avator from "@assets/icons/Avatar.svg";
+
 import {
   Box,
   Button,
@@ -16,7 +18,7 @@ import * as Yup from "yup";
 import Header from "@components/Topbar/Header.js";
 import { StyledInputField, StyledTextField } from "./style";
 import useStyles from "./style";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getAllDomains } from "@services/Domains/api";
 import { registerAdmin } from "@services/Accounts/api";
 import MuiAlert from "@mui/material/Alert";
@@ -97,6 +99,9 @@ const AddAdmin = () => {
                         <span className={classes.title}>Register Admin</span>
                       )}
                     </Typography>
+                    <Link to="/reports">
+                      <img src={avator} alt="" width={45} />
+                    </Link>
                   </Box>
 
                   <form onSubmit={formik.handleSubmit}>

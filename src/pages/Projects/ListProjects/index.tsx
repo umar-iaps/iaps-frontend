@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { useEffect, useState } from "react";
+
 import {
   Box,
   FormControl,
@@ -7,6 +8,11 @@ import {
   MenuItem,
   Select,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
   CircularProgress,
   Snackbar,
 } from "@mui/material";
@@ -37,6 +43,19 @@ const Projects = () => {
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [error, setError] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [deleteItemId, setDeleteItemId] = useState("");
+
+  const handleCancelDelete = (): void => {
+    // Close the confirmation popup
+    setShowDeleteConfirmation(false);
+  };
+  const handleConfirmDelete = (id: string): void => {
+    // Set the ID of the item to be deleted
+    setDeleteItemId(id);
+    // Show the confirmation popup
+    setShowDeleteConfirmation(true);
+  };
 
   useEffect(() => {
     if (searchTerm === "") {
@@ -94,6 +113,8 @@ const Projects = () => {
         setFilteredTableContent(newData);
         setTableData(newData);
         setIsSnackbarOpen(true);
+        setShowDeleteConfirmation(false);
+
         setSnackbarMessage("Project deleted successfully!");
       })
       .catch((error) => {
@@ -145,7 +166,7 @@ const Projects = () => {
               }}
             >
               <Box sx={{ mt: 2 }}>
-                <FormControl sx={{ m: 1, minWidth: 170 }} size="small">
+                <FormControl sx={{ m: 1, minWidth: 155 }} size="small">
                   <InputLabel
                     id="demo-select-small-label"
                     sx={{ color: "#999999" }}
@@ -167,7 +188,8 @@ const Projects = () => {
                     ))}
                   </Select>
                 </FormControl>
-                <FormControl sx={{ m: 1, minWidth: 170 }} size="small">
+
+                <FormControl sx={{ m: 1, minWidth: 155 }} size="small">
                   <InputLabel
                     id="demo-select-small-label"
                     sx={{ color: "#999999" }}
@@ -189,19 +211,20 @@ const Projects = () => {
                     ))}
                   </Select>
                 </FormControl>
+                <FormControl sx={{ mt: 1 }} size="small">
+                  <StyledSearch
+                    placeholder="Search"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    InputProps={{ startAdornment: <StyledIcon /> }}
+                  />
+                </FormControl>
               </Box>
               <Link to="/projects/new">
                 <AddButton title="Add New Project" />
               </Link>
             </ButtonGroup>
-            <Box sx={{ textAlign: "left" }}>
-              <StyledSearch
-                placeholder="Search"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                InputProps={{ endAdornment: <StyledIcon /> }}
-              />
-            </Box>
+
             <Typography
               variant="h6"
               sx={{
@@ -230,7 +253,7 @@ const Projects = () => {
                 tableContent={filteredTableContent}
                 tableHeadingData={projectHeadingData}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDelete={handleConfirmDelete}
               />
             )}
             <Snackbar
@@ -254,6 +277,22 @@ const Projects = () => {
               </MuiAlert>
             </Snackbar>
           </Container>
+          <Dialog open={showDeleteConfirmation} onClose={handleCancelDelete}>
+            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogContent>
+              Are you sure you want to delete this item?
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCancelDelete}>Cancel</Button>
+              <Button
+                onClick={() => handleDelete(deleteItemId)}
+                color="error"
+                autoFocus
+              >
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Box>
       </center>
     </Box>

@@ -126,7 +126,7 @@ const ListJobs = () => {
                   placeholder="Search"
                   value={searchTerm}
                   onChange={handleSearchChange}
-                  InputProps={{ endAdornment: <StyledIcon /> }}
+                  InputProps={{ startAdornment: <StyledIcon /> }}
                 />
               </Box>
               <Link to="/jobs/new">

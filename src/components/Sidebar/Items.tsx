@@ -11,9 +11,12 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import sidebarData from "./SideBarData";
 import { ISideBarDataItem } from "@interfaces/ISidebarItem";
 import useStyles from "./style";
+import { LoginOutlined } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const SidebarItems = (): JSX.Element => {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   // const [isSidebar, setIsSidebar] = useState<boolean>(true);
 
@@ -94,6 +97,24 @@ const SidebarItems = (): JSX.Element => {
             </ListItem>
           </Link>
         ))}
+
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={() => {
+            localStorage.removeItem("authToken");
+            navigate("/login");
+          }}
+          className={classes.listItemButton}
+        >
+          <ListItemIcon
+            className={classes.listItemIcon}
+            sx={{ color: "white" }}
+          >
+            <LoginOutlined />
+          </ListItemIcon>
+          <ListItemText primary={"Logout"} />
+        </ListItemButton>
+      </ListItem>
     </List>
   );
 };

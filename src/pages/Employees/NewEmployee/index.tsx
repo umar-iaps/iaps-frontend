@@ -121,7 +121,7 @@ const AddEmployees = () => {
 
   return (
     <>
-      <Header title="Members" />
+      <Header title="Team" />
       <center>
         <Box style={{ marginTop: "40px", marginBottom: "66px" }}>
           <Container>

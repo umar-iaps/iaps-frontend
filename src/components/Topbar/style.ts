@@ -5,6 +5,7 @@ export const StyledAppBar = styled(AppBar)(() => ({
   padding: "15px 35px",
   background: "#FCFCFC",
   boxShadow: "inset 1px 0px 0px #F4F4F4",
+  zIndex: "inherit",
 }));
 
 export const StyledTitle = styled(Typography)(() => ({

@@ -93,8 +93,8 @@ const AddProject = () => {
       formData.append("Domains", data?.domains[0].id);
       // formData.append("Sectors");
       updateProject(formData).then(() => {
-        setIsSnackbarOpen(true);
         setSnackbarMessage("Project updated successfully!");
+        setIsSnackbarOpen(true);
         setTimeout(() => {
           navigate("/projects");
         }, 2000);
@@ -107,8 +107,8 @@ const AddProject = () => {
       formData.append("Domains", "d598e974-d7ed-4994-a2dd-2e3fdf410c2e");
       formData.append("Sectors", data?.sectors);
       addProject(formData).then(() => {
-        setIsSnackbarOpen(true);
         setSnackbarMessage("Project added successfully!");
+        setIsSnackbarOpen(true);
         setTimeout(() => {
           navigate("/projects");
         }, 2000);
@@ -251,7 +251,7 @@ const AddProject = () => {
                       }}
                     >
                       <span className={classes.title2}>
-                        &nbsp;&nbsp; Sectors
+                        &nbsp;&nbsp; Services
                       </span>
                     </Typography>
 
@@ -260,7 +260,7 @@ const AddProject = () => {
                         id="demo-select-small-label"
                         sx={{ color: "#999999" }}
                       >
-                        Select a Sector...
+                        Select a Service...
                       </InputLabel>
                       <Select
                         labelId="demo-select-small-label"
@@ -386,6 +386,12 @@ const AddProject = () => {
               </Grid>
             </Grid>
           </Container>
+          <Snackbar
+            open={isSnackbarOpen}
+            autoHideDuration={3000}
+            onClose={handleSnackbarClose}
+            message={snackbarMessage}
+          />
         </Box>
       </center>
     </>

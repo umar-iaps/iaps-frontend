@@ -3,7 +3,14 @@ import { useState, useEffect } from "react";
 import { Box, Typography, Snackbar } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
-import { ButtonGroup } from "@mui/material";
+import {
+  ButtonGroup,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import CommonTable from "@components/Table";
 import AddButton from "@components/AddButton";
@@ -36,6 +43,20 @@ const ArticlesList = () => {
   const [error, setError] = useState<Error | null>(null);
 
   const navigate = useNavigate();
+
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [deleteItemId, setDeleteItemId] = useState("");
+
+  const handleCancelDelete = (): void => {
+    // Close the confirmation popup
+    setShowDeleteConfirmation(false);
+  };
+  const handleConfirmDelete = (id: string): void => {
+    // Set the ID of the item to be deleted
+    setDeleteItemId(id);
+    // Show the confirmation popup
+    setShowDeleteConfirmation(true);
+  };
 
   useEffect(() => {
     if (searchTerm === "") {
@@ -85,6 +106,7 @@ const ArticlesList = () => {
         });
         setFilteredTableContent(newData);
         setIsSnackbarOpen(true);
+        setShowDeleteConfirmation(false);
         setSnackbarMessage("Article deleted successfully!");
       })
       .catch((error) => {
@@ -135,7 +157,7 @@ const ArticlesList = () => {
                   placeholder="Search"
                   value={searchTerm}
                   onChange={handleSearchChange}
-                  InputProps={{ endAdornment: <StyledIcon /> }}
+                  InputProps={{ startAdornment: <StyledIcon /> }}
                 />
               </Box>
               <Link to="/articles/new">
@@ -179,7 +201,7 @@ const ArticlesList = () => {
                 tableContent={filteredTableContent}
                 tableHeadingData={articleHeadingData}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDelete={handleConfirmDelete}
               />
             )}
 
@@ -202,6 +224,22 @@ const ArticlesList = () => {
               </MuiAlert>
             </Snackbar>
           </Container>
+          <Dialog open={showDeleteConfirmation} onClose={handleCancelDelete}>
+            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogContent>
+              Are you sure you want to delete this item?
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCancelDelete}>Cancel</Button>
+              <Button
+                onClick={() => handleDelete(deleteItemId)}
+                color="error"
+                autoFocus
+              >
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Box>
       </center>
     </Box>

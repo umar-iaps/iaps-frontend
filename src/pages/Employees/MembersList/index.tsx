@@ -14,6 +14,13 @@ import CircularProgress from "@mui/material/CircularProgress";
 import MuiAlert from "@mui/material/Alert";
 import { ApiResponse } from "src/types/ApiResponse";
 import { IMember } from "@interfaces/IMember";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 
 interface MemberData {
   id: string;
@@ -31,6 +38,18 @@ const MembersList = () => {
   const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [error, setError] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [deleteItemId, setDeleteItemId] = useState("");
+  const handleCancelDelete = (): void => {
+    // Close the confirmation popup
+    setShowDeleteConfirmation(false);
+  };
+  const handleConfirmDelete = (id: string): void => {
+    // Set the ID of the item to be deleted
+    setDeleteItemId(id);
+    // Show the confirmation popup
+    setShowDeleteConfirmation(true);
+  };
 
   const navigate = useNavigate();
 
@@ -75,6 +94,7 @@ const MembersList = () => {
         });
         setFilteredTableContent(newData);
         setIsSnackbarOpen(true);
+        setShowDeleteConfirmation(false);
         setSnackbarMessage("Member deleted successfully!");
       })
       .catch((error) => {
@@ -99,7 +119,7 @@ const MembersList = () => {
 
   return (
     <Box sx={{ mb: 5 }}>
-      <Header title="Members" />
+      <Header title="Team" />
       <center>
         <Box
           sx={{
@@ -125,7 +145,7 @@ const MembersList = () => {
                   placeholder="Search"
                   value={searchTerm}
                   onChange={handleSearchChange}
-                  InputProps={{ endAdornment: <StyledIcon /> }}
+                  InputProps={{ startAdornment: <StyledIcon /> }}
                 />
               </Box>
               <Link to="/employees/new">
@@ -145,7 +165,7 @@ const MembersList = () => {
                 textAlign: "left",
               }}
             >
-              Members
+              Team
             </Typography>
 
             {loading ? (
@@ -171,7 +191,7 @@ const MembersList = () => {
                 // @ts-ignore
                 onEdit={handleEdit}
                 // @ts-ignore
-                onDelete={handleDelete}
+                onDelete={handleConfirmDelete}
               />
             )}
 
@@ -194,6 +214,22 @@ const MembersList = () => {
               </MuiAlert>
             </Snackbar>
           </Container>
+          <Dialog open={showDeleteConfirmation} onClose={handleCancelDelete}>
+            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogContent>
+              Are you sure you want to delete this item?
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCancelDelete}>Cancel</Button>
+              <Button
+                onClick={() => handleDelete(deleteItemId)}
+                color="error"
+                autoFocus
+              >
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Box>
       </center>
     </Box>

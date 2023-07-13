@@ -56,7 +56,7 @@ body {
 }
 
 .css-n1hre1-MuiPaper-root-MuiAppBar-root {
-  z-index: inherit !important;
+  /* z-index: inherit !important; */
 }
 @media screen and (max-width: 768px) {
   .css-v76mho-MuiButtonGroup-root {

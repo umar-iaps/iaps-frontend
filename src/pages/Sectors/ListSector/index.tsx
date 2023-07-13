@@ -7,6 +7,11 @@ import {
   ButtonGroup,
   Typography,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import CommonTable from "@components/Table";
@@ -24,7 +29,21 @@ const ListSector = (): JSX.Element => {
     []
   );
   const [loading, setLoading] = useState<boolean>(true);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [deleteItemId, setDeleteItemId] = useState("");
+
   const navigate = useNavigate();
+
+  const handleCancelDelete = (): void => {
+    // Close the confirmation popup
+    setShowDeleteConfirmation(false);
+  };
+  const handleDelete = (id: string): void => {
+    // Set the ID of the item to be deleted
+    setDeleteItemId(id);
+    // Show the confirmation popup
+    setShowDeleteConfirmation(true);
+  };
 
   useEffect(() => {
     if (searchTerm === "") {
@@ -80,7 +99,7 @@ const ListSector = (): JSX.Element => {
     navigate(`/sectors/${id}`);
   };
 
-  const handleDelete = (id: string) => {};
+  const handleConfirmDelete = (id: string) => {};
 
   return (
     <Box sx={{ mb: 5 }}>
@@ -108,7 +127,7 @@ const ListSector = (): JSX.Element => {
               <Box sx={{ mt: 2 }}>
                 <StyledSearch
                   placeholder="Search"
-                  InputProps={{ endAdornment: <StyledIcon /> }}
+                  InputProps={{ startAdornment: <StyledIcon /> }}
                   onChange={handleSearchChange}
                   value={searchTerm}
                 />
@@ -153,6 +172,18 @@ const ListSector = (): JSX.Element => {
               />
             )}
           </Container>
+          <Dialog open={showDeleteConfirmation} onClose={handleCancelDelete}>
+            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogContent>
+              Are you sure you want to delete this item?
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCancelDelete}>Cancel</Button>
+              <Button onClick={handleDelete} color="error" autoFocus>
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Box>
       </center>
     </Box>

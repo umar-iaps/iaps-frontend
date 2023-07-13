@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -24,11 +24,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
-  }, []);
-
   const validationSchema = yup.object({
     email: yup.string().email("Invalid email").required("Email is required"),
     password: yup.string().required("Password is required"),
@@ -38,6 +33,7 @@ const Login = () => {
     login(values)
       .then((response) => {
         const result = response.data;
+
         if (result.success) {
           const user = result.dataResult;
           dispatch(setUser(user));

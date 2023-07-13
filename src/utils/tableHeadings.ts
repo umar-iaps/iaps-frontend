@@ -27,7 +27,7 @@ export const memberHeadingData: IHeadingData = {
 
 export const reportHeadingData: IHeadingData = {
   title: "Title",
-  expertize: "Expertize",
+  expertize: "Expertise",
   sectors: "Sectors",
   regions: "Regions",
   year: "Year",
