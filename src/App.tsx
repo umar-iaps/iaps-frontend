@@ -17,14 +17,8 @@ import AddSector from "@pages/Sectors/NewSector";
 import { Settings } from "@mui/icons-material";
 import PrivateRoute from "./PrivateRoute";
 import AddAdmin from "@pages/Admins/NewAdmin";
-import { useState, useEffect } from "react";
+
 function App() {
-  const [login, setLogin] = useState(false);
-  useEffect(() => {
-    if (localStorage.getItem("authToken")) {
-      setLogin(true);
-    }
-  }, []);
   return (
     <Router>
       <Routes>
@@ -32,7 +26,7 @@ function App() {
         <Route
           path="/"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <div></div>
               </Layout>
@@ -42,7 +36,7 @@ function App() {
         <Route
           path="/admins"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <LastAdmins></LastAdmins>
               </Layout>
@@ -52,7 +46,7 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <div></div>
               </Layout>
@@ -62,7 +56,7 @@ function App() {
         <Route
           path="/projects"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <Projects />
               </Layout>
@@ -72,7 +66,7 @@ function App() {
         <Route
           path="/projects/:id"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <AddProject />
               </Layout>
@@ -82,7 +76,7 @@ function App() {
         <Route
           path="/projects/new"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <AddProject />
               </Layout>
@@ -92,7 +86,7 @@ function App() {
         <Route
           path="/articles"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <ArticlesList />
               </Layout>
@@ -102,7 +96,7 @@ function App() {
         <Route
           path="/articles/:id"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <AddArticle />
               </Layout>
@@ -112,7 +106,7 @@ function App() {
         <Route
           path="/articles/new"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <AddArticle />
               </Layout>
@@ -122,7 +116,7 @@ function App() {
         <Route
           path="/jobs"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <ListJobs />
               </Layout>
@@ -132,7 +126,7 @@ function App() {
         <Route
           path="/jobs/new"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <AddJobs />
               </Layout>
@@ -142,7 +136,7 @@ function App() {
         <Route
           path="/jobs/:id"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <AddJobs />
               </Layout>
@@ -152,7 +146,7 @@ function App() {
         <Route
           path="/employees"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <MembersList />
               </Layout>
@@ -162,7 +156,7 @@ function App() {
         <Route
           path="/employees/:id"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <AddEmployees />
               </Layout>
@@ -172,7 +166,7 @@ function App() {
         <Route
           path="/employees/new"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <AddEmployees />
               </Layout>
@@ -182,7 +176,7 @@ function App() {
         <Route
           path="/reports"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <ReportsList />
               </Layout>
@@ -192,7 +186,7 @@ function App() {
         <Route
           path="/reports/new"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <AddReports />
               </Layout>
@@ -202,7 +196,7 @@ function App() {
         <Route
           path="/reports/:id"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <AddReports />
               </Layout>
@@ -212,7 +206,7 @@ function App() {
         <Route
           path="/sectors"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <ListSector />
               </Layout>
@@ -222,7 +216,7 @@ function App() {
         <Route
           path="/sectors/:id"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <AddSector />
               </Layout>
@@ -232,7 +226,7 @@ function App() {
         <Route
           path="/sectors/new"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <AddSector />
               </Layout>
@@ -242,7 +236,7 @@ function App() {
         <Route
           path="/settings"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <Settings />
               </Layout>
@@ -252,7 +246,7 @@ function App() {
         <Route
           path="/admins/new"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <AddAdmin />
               </Layout>
@@ -262,7 +256,7 @@ function App() {
         <Route
           path="/admins/:id"
           element={
-            <PrivateRoute isLoggedIn={login}>
+            <PrivateRoute>
               <Layout>
                 <AddAdmin />
               </Layout>

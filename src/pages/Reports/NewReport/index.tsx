@@ -33,8 +33,6 @@ import { getAllDomains } from "@services/Domains/api.ts";
 import { getAllRegions } from "@services/Regions/api.ts";
 import { getAllSectors } from "@services/Sectors/api.ts";
 import { addReport, getReportById } from "@services/Reports/api.ts";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 
 const AddReports = () => {
   const classes = useStyles();
@@ -47,32 +45,6 @@ const AddReports = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const validationSchema = Yup.object({
-    title: Yup.string().required("Title is required"),
-    expertize: Yup.string().required("Expertize is required"),
-    year: Yup.number().required("Year is required"),
-    domain: Yup.string().required("Domain is required"),
-    sector: Yup.string().required("Sector is required"),
-    region: Yup.string().required("Region is required"),
-    pdfFile: Yup.mixed().required("PDF file is required"),
-  });
-
-  const formik = useFormik({
-    initialValues: {
-      title: "",
-      expertize: "",
-      year: "",
-      domain: "",
-      sector: "",
-      region: "",
-      pdfFile: null,
-    },
-    validationSchema,
-    onSubmit: (values) => {
-      submitForm(values);
-    },
-  });
-
   const handleSnackbarClose = () => {
     setIsSnackbarOpen(false);
   };
@@ -80,12 +52,11 @@ const AddReports = () => {
   const handleChange = (event) => {
     let { name, value, files } = event.target;
     if (name === "pdfFile") {
-      setData((prev: any) => {
+      setData((prev) => {
         return { ...prev, [name]: files[0] };
       });
-      // formik.setFieldValue(name, files[0]);
     } else {
-      setData((prev: any) => {
+      setData((prev) => {
         return { ...prev, [name]: value };
       });
     }
@@ -95,7 +66,7 @@ const AddReports = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const submitForm = (values) => {
+  const submitForm = (values, e: any) => {
     console.log("in submit", values);
     const formData = new FormData();
     formData.append("Title", data?.title);
@@ -182,7 +153,7 @@ const AddReports = () => {
                     </Link>
                   </Box>
 
-                  <form onSubmit={formik.handleSubmit}>
+                  <form onSubmit={submitForm}>
                     <StyledInputField>
                       <br />
                       <Typography
@@ -208,7 +179,6 @@ const AddReports = () => {
                         inputProps={{
                           style: { caretColor: "#2A85FF" },
                         }}
-                        error={formik.touched.title && formik.errors.title}
                       />
                     </StyledInputField>
 
@@ -232,12 +202,6 @@ const AddReports = () => {
                         name="expertize"
                         value={data?.expertize}
                         onChange={handleChange}
-                        error={
-                          formik.touched.expertize && formik.errors.expertize
-                        }
-                        helperText={
-                          formik.touched.expertize && formik.errors.expertize
-                        }
                       />
                     </StyledInputField>
                     <StyledInputField>
@@ -256,8 +220,6 @@ const AddReports = () => {
                         inputProps={{
                           style: { caretColor: "#2A85FF" },
                         }}
-                        error={formik.touched.year && formik.errors.year}
-                        helperText={formik.touched.year && formik.errors.year}
                       />
                     </StyledInputField>
                     <StyledInputField>
@@ -287,16 +249,11 @@ const AddReports = () => {
                           labelId="demo-select-small-label"
                           id="demo-select-small"
                           name="domain"
-                          // value={data?.domains[0].name}
                           onChange={handleChange}
                           label="Age"
                           sx={{ borderRadius: "35px", textAlign: "left" }}
-                          error={formik.touched.domain && formik.errors.domain}
-                          helperText={
-                            formik.touched.domain && formik.errors.domain
-                          }
                         >
-                          {domains.map((option: any) => (
+                          {domains.map((option) => (
                             <MenuItem key={option.id} value={option.id}>
                               {option.name}
                             </MenuItem>
@@ -337,18 +294,11 @@ const AddReports = () => {
                               labelId="demo-select-small-label"
                               id="demo-select-small"
                               name="sector"
-                              // value={data?.sectors[0].name}
                               onChange={handleChange}
                               label="Age"
                               sx={{ borderRadius: "35px", textAlign: "left" }}
-                              error={
-                                formik.touched.sector && formik.errors.sector
-                              }
-                              helperText={
-                                formik.touched.sector && formik.errors.sector
-                              }
                             >
-                              {sectors.map((option: any) => (
+                              {sectors.map((option) => (
                                 <MenuItem key={option.id} value={option.id}>
                                   {option.name}
                                 </MenuItem>
@@ -388,18 +338,11 @@ const AddReports = () => {
                               labelId="demo-select-small-label"
                               id="demo-select-small"
                               name="region"
-                              // value={formik.values.region}
                               onChange={handleChange}
                               label="Age"
                               sx={{ borderRadius: "35px", textAlign: "left" }}
-                              error={
-                                formik.touched.region && formik.errors.region
-                              }
-                              helperText={
-                                formik.touched.region && formik.errors.region
-                              }
                             >
-                              {regions.map((option: any) => (
+                              {regions.map((option) => (
                                 <MenuItem key={option.id} value={option.id}>
                                   {option.name}
                                 </MenuItem>

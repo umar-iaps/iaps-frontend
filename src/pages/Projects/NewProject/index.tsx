@@ -1,5 +1,7 @@
 // @ts-nocheck
 import { useEffect, useState } from "react";
+import MuiAlert from "@mui/material/Alert";
+
 import {
   Snackbar,
   Box,
@@ -391,8 +393,22 @@ const AddProject = () => {
             open={isSnackbarOpen}
             autoHideDuration={3000}
             onClose={handleSnackbarClose}
-            message={snackbarMessage}
-          />
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+          >
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              onClose={handleSnackbarClose}
+              severity="success"
+            >
+              {params.id
+                ? "Project updated successfully!"
+                : "Project added successfully!"}
+            </MuiAlert>
+          </Snackbar>
         </Box>
       </center>
     </>

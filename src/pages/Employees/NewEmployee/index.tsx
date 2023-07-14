@@ -82,7 +82,7 @@ const AddEmployees = () => {
         setIsSnackbarOpen(true);
         setTimeout(() => {
           navigate("/employees");
-        });
+        }, 2000);
       });
     } else {
       let formData = new FormData();
@@ -95,7 +95,7 @@ const AddEmployees = () => {
         setIsSnackbarOpen(true);
         setTimeout(() => {
           navigate("/employees");
-        });
+        }, 2000);
       });
     }
   };

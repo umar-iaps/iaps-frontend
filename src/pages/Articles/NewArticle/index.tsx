@@ -87,7 +87,7 @@ const AddArticle = () => {
         setIsSnackbarOpen(true);
         setTimeout(() => {
           navigate("/articles");
-        });
+        }, 2000);
       });
     } else {
       let formData = new FormData();

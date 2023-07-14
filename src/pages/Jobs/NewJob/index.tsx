@@ -80,7 +80,7 @@ const AddJobs = () => {
       setIsSnackbarOpen(true);
       setTimeout(() => {
         navigate("/jobs");
-      });
+      }, 2000);
     } else {
       const updatedFormData = {
         ...formData,
@@ -90,7 +90,7 @@ const AddJobs = () => {
         setIsSnackbarOpen(true);
         setTimeout(() => {
           navigate("/jobs");
-        });
+        }, 2000);
       });
     }
   };
@@ -424,7 +424,7 @@ const AddJobs = () => {
             elevation={6}
             variant="filled"
           >
-            Data added successfully
+            Job added successfully
           </MuiAlert>
         </Snackbar>
       </center>

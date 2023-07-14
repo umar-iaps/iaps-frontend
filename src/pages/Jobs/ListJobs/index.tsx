@@ -13,6 +13,13 @@ import { jobHeadingData } from "@utils/tableHeadings";
 import { deleteJob, getJobsByDomainId } from "@services/Jobs/api";
 import CircularProgress from "@mui/material/CircularProgress";
 import MuiAlert from "@mui/material/Alert";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 
 const ListJobs = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,6 +29,16 @@ const ListJobs = () => {
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [error, setError] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [deleteItemId, setDeleteItemId] = useState("");
+
+  const handleCancelDelete = (): void => {
+    setShowDeleteConfirmation(false);
+  };
+  const handleConfirmDelete = (id: string): void => {
+    setDeleteItemId(id);
+    setShowDeleteConfirmation(true);
+  };
 
   const navigate = useNavigate();
 
@@ -84,6 +101,7 @@ const ListJobs = () => {
           return item.id !== id;
         });
         setFilteredTableContent(newData);
+        setShowDeleteConfirmation(false);
         setIsSnackbarOpen(true);
         setSnackbarMessage("Job deleted successfully!");
       })
@@ -170,7 +188,7 @@ const ListJobs = () => {
                 tableContent={filteredTableContent}
                 tableHeadingData={jobHeadingData}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDelete={handleConfirmDelete}
               />
             )}
 
@@ -187,12 +205,28 @@ const ListJobs = () => {
                 elevation={6}
                 variant="filled"
                 onClose={handleSnackbarClose}
-                severity="error"
+                severity="success"
               >
                 {snackbarMessage}
               </MuiAlert>
             </Snackbar>
           </Container>
+          <Dialog open={showDeleteConfirmation} onClose={handleCancelDelete}>
+            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogContent>
+              Are you sure you want to delete this item?
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCancelDelete}>Cancel</Button>
+              <Button
+                onClick={() => handleDelete(deleteItemId)}
+                color="error"
+                autoFocus
+              >
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Box>
       </center>
     </Box>
