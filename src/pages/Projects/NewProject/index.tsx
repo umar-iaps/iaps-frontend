@@ -40,6 +40,7 @@ const AddProject = () => {
   const classes = useStyles();
   const params = useParams();
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const navigate = useNavigate();
   const [countries, setCountries] = useState([]);
   const [sectors, setSectors] = useState([]);
