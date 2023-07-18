@@ -72,6 +72,7 @@ export const StyledTypography = styled(Typography)(() => ({
 
 export const StyledTextarea = styled(TextareaAutosize)(() => ({
   borderRadius: "6px",
+  background: "#FFFFFF",
   border: "1px solid #CCC",
   "&:focus": {
     borderRadius: "5px",
